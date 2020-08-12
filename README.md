@@ -1,11 +1,11 @@
 # ETC5521 Assignment 1 
 
-Team name: [FILL]
+Team name: taipan
 
 Team members:
 
-* [FILL]
-* [FILL]
+* Helen Evangelina
+* Yiwen Jiang
 
 # Steps
 
