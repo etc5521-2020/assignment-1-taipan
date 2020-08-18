@@ -10,6 +10,12 @@ output:
   html_document
 ---
 
+```{r setup, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+
 [This assignment is for ETC5521 Assignment 1 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
 
 
@@ -18,6 +24,65 @@ output:
 [FILL] Give the bigger picture of the data, and inspire the reader to learn more about the problem by reading your analysis. 
 
 # Data description
+
+The data set tracks woodland caribou in northern British Columbia published by the Movebank Data Repository at https://www.datarepository.movebank.org/handle/10255/move.955. 
+It consists of almost 250,000 location tags of 260 caribou, from 1988 to 2016.  
+ 
+The boreal woodland caribou (Rangifer tarandus caribou), also known as woodland caribou, boreal forest caribou and forest-dwelling caribou, is a North American subspecies of the reindeer (or the caribou in North America) with the vast majority of animals in Canada. They prefer lichen-rich mature forests and mainly live in marshes, bogs, lakes and river regions. Caribou are considered an ancient member of the deer family Cervidae (Banfield 1974). They are smaller than Moose (Alces americanus) and Elk (Cervus canadensis), standing 1.0–1.2 m high at the shoulder (Thomas and Gray 2002). Due to the caribou is classified as "Vulnerable" on the International Union for the Conservation of Nature's (IUCN) Red List. The data provided for the study of the B.C. Ministry of Environment & Climate Change to report the management and recovery of the caribou.  
+
+Because this data set is used for analysing the reproduction of species, the data is obtained by observation rather than experiment. There is no treatment group and the control group. The time frame of collection was started from 1988 and end of 2016. The data sets were separated into two data files and provided by .csv format. The following are the variables in each data.  
+
+
+- The `individual` data comes from _Mountain caribou in British Columbia-reference-data.csv_. The data contains the relevant information of 286 caribou. The variables are showing in the following table: 
+
+```{r individual_table, echo=FALSE}
+individual_info <- tibble(Variable = c("animal_id", "sex", "life_stage", "pregnant", "with_calf", 
+                                       "death_cause", "study_site", "deploy_on_longitude", 
+                                       "deploy_on_latitude", "deploy_on_comments", "deploy_off_longitude",
+                                       "deploy_off_latitude", "deploy_off_type", "deploy_off_comments"),
+                          Class = c("character", "character", "character", 
+                                    "logical", "logical", "character", "character", 
+                                    "double", "double", "character", "double", 
+                                    "double", "character", "character"),
+                          Description = c("Individual identifier for animal", "Sex of animal", 
+                                          "Age class (in years) at beginning of deployment", 
+                                          "Whether animal was pregnant at beginning of deployment", 
+                                          "Whether animal had a calf at time of deployment", 
+                                          "Cause of death",
+                                          "Deployment site or colony, or a location-related group such as the herd or pack name",
+                                          "Longitude where animal was released at beginning of deployment",
+                                          "Latitude where animal was released at beginning of deployment",
+                                          "Additional information about tag deployment",
+                                          "Longitude where deployment ended",
+                                          "Latitude where deployment ended",
+                                          "Classification of tag deployment end (see table below for full description", 
+                                          "Additional information about tag deployment end")) 
+
+kable(individual_info) %>%
+  kable_styling(bootstrap_options = "striped", 
+                full_width = F, 
+                position = "left")
+```
+
+- The `location` comes from _Mountain caribou in British Columbia-gps.csv_. The data contains location information of each counted caribous for every 4 fours.
+
+```{r locations_table, echo=FALSE}
+locations_info <- tibble(Variable = c("event_id", "animal_id", "study_site", "season", "timestamp", "longitude", "latitude"),
+                          Class = c("double", "character", "character", "character", "datetime", "double", "double"),
+                          Description = c("Identifier for an individual measurement", 
+                                          "Individual identifier for animal", 
+                                          "Deployment site or colony, or a location-related group such as the herd or pack name", 
+                                          "Season (Summer/Winter) at time of measurement", 
+                                          "Date and time of measurement",
+                                          "Longitude of measurement",
+                                          "Latitude of measurement")) 
+
+kable(locations_info) %>%
+  kable_styling(bootstrap_options = "striped", 
+                full_width = F, 
+                position = "left")
+```
+
 
 ```{r read_data}
 # Get the Data
@@ -38,7 +103,7 @@ tuesdata <- tidytuesdayR::tt_load(2020, week = 26)
 individuals <- tuesdata$individuals
 ```
 
-```{r data_cleaning}
+```{r data_cleaning, eval=FALSE}
 # Load libraries
 library(tidyverse)
 library(janitor)
