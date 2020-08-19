@@ -25,11 +25,11 @@ library(kableExtra)
 
 # Data description
 
-The data set tracks woodland caribou in northern British Columbia published by the Movebank Data Repository at https://www.datarepository.movebank.org/handle/10255/move.955. This data was collected by putting trackers of almost 250,000 location tags on 260 caribou, from 1988 to 2016, which was accessed through Movebank. Movebank captures the locations of individual animals over time by tracking the bio-logging sensors attached to animals (Kranstauber et al., 2011). 
+The data set tracks woodland caribou in northern British Columbia published by the Movebank Data Repository at https://www.datarepository.movebank.org/handle/10255/move.955. This data was collected by putting trackers of almost 250,000 location tags on 260 caribou, from 1988 to 2016, which was accessed through Movebank. 
 
 The boreal woodland caribou (Rangifer tarandus caribou), also known as woodland caribou, boreal forest caribou and forest-dwelling caribou, is a North American subspecies of the reindeer (or the caribou in North America) with the vast majority of animals in Canada. They prefer lichen-rich mature forests and mainly live in marshes, bogs, lakes and river regions. Caribou are considered as an ancient member of the deer family Cervidae (Banfield, 1974). They are smaller than Moose (Alces americanus) and Elk (Cervus canadensis), standing 1.0–1.2 m high at the shoulder (Thomas and Gray, 2002). Due to the caribou is classified as "Vulnerable" on the International Union for the Conservation of Nature's (IUCN) Red List. The data provided for the study of the B.C. Ministry of Environment & Climate Change to report the management and recovery of the caribou.  
 
-Because this data set is used for analysing the reproduction of species, the data is obtained by observation rather than experiment. There is no treatment group and the control group. The time frame of collection was started from 1988 and end of 2016. The data sets were separated into two data files and provided by .csv format. The following are the variables in each data.  
+Because this data set is used for analysing the reproduction of species, the data is obtained by observation rather than experiment. There is no treatment group and the control group. The time frame of collection was started from 1988 and end of 2016. Movebank captures the locations of individual animals over time by tracking the bio-logging sensors attached to animals (Kranstauber et al., 2011). The data sets were separated into two data files and provided by .csv format. The following are the variables in each data.  
 
 
 - The `individual` data comes from _Mountain caribou in British Columbia-reference-data.csv_. The data contains the relevant information of 286 caribou. The variables are showing in the following table: 
@@ -81,6 +81,11 @@ kable(locations_info) %>%
                 full_width = F, 
                 position = "left")
 ```
+
+This set of data is primarily used to analyse the changes in the number of caribou from 1988 to 2016 to observe the survival of the species. Is also can be used for further analysis, including:
+- From the location data using location and date variables to analysis, the varies of these habitats by seasonally (summer and winter).
+- According to the  Peace Northern, Caribou Plan endorsed in  November 2012. The goal is to increase the South Peace Northern Caribou to 1,200 animals within 21 years.  By using the data sets we can analyse whether the trend of the number of animals is increasing in the previous years, and also is it possible to achieve the in 2032
+- By analysing the classification of tag deployment end to decide whether the management plan is efficient to increase the number of caribou and whether they have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decide to improve the quality of the tag
 
 
 ```{r read_data}
@@ -155,6 +160,7 @@ locations <- locations_raw %>%
 write_csv(individuals, "./caribou-location-tracking/individuals.csv")
 write_csv(locations, "./caribou-location-tracking/locations.csv")
 ```
+
 
 
 # Analysis and findings
