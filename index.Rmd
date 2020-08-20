@@ -107,6 +107,12 @@ tuesdata <- tidytuesdayR::tt_load(2020, week = 26)
 individuals <- tuesdata$individuals
 ```
 
+The data being used is the dataset from the Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia available from Movebank (BC Ministry of Environment, 2014). The raw datasets are first read by using read_csv() function. It can be noticed from the raw datasets that the variable names use “-“ instead of “_”. Using dash in a variable name might result to issues, as the valid variable name in R should consist of dot or underline characters. Another problem from this dataset is the values in the “animal-life-stage” consist of spacing, which might lead to issues as it is inconsistent. Another noticeable thing is the datasets have a lot of NA values. Therefore, the data needs to be cleaned by using the tidyverse and janitor libraries.
+
+To clean the individuals data, firstly clean_names() function from the janitor package is used to return the data.frame with clean names.  What this function does is changing the variable names into a tidier form. As mentioned before, using dash in variable names is not appropriate in R. Notice that the raw dataset has names like “deploy-off-latitude” which is changed into “deploy_off_latitude”.  Next is to assigned the result to transmute(), which will compute new columns but will drop existing columns. This is done to make the variable names in a tidier way. The whitespace in the life stage is gotten rid to address inconsistent spacing by using str_remove_all() function. After tidying the variable names with transmute, the “reproductive_condition” variable is separated into “pregnant” and “with_calf” by using the separate() function as this variable actually contains two dimensions, and then assigning those variables into new columns by using the mutate() function which consists of either TRUE or FALSE value.
+
+The locations data is cleaned by using the same method as the individuals data, which includes cleaning the name first by using clean_names() function to arrive to a data.frame with clean names. The next step is to use transmute() function to compute new columns with dropping existing columns. After cleaning both datasets, the final datasets are written into csv format by using write_csv() function.
+
 ```{r data_cleaning, eval=FALSE}
 # Load libraries
 library(tidyverse)
