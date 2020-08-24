@@ -13,6 +13,8 @@ output:
 ```{r setup, echo=FALSE}
 library(tidyverse)
 library(kableExtra)
+library(lubridate)
+library(dplyr)
 ```
 
 
@@ -25,12 +27,12 @@ library(kableExtra)
 
 # Data description
 
-The data set tracks woodland caribou in northern British Columbia published by the Movebank Data Repository at https://www.datarepository.movebank.org/handle/10255/move.955. This data was collected by putting trackers of almost 250,000 location tags on 260 caribou, from 1988 to 2016, which was accessed through Movebank. 
+## Overview of the dataset
+The dataset tracks woodland caribou in northern British Columbia published by the Movebank Data Repository at https://www.datarepository.movebank.org/handle/10255/move.955. This data was collected by putting trackers of almost 250,000 location tags on 260 caribou, from 1988 to 2016, which was accessed through Movebank. 
 
 The boreal woodland caribou (Rangifer tarandus caribou), also known as woodland caribou, boreal forest caribou and forest-dwelling caribou, is a North American subspecies of the reindeer (or the caribou in North America) with the vast majority of animals in Canada. They prefer lichen-rich mature forests and mainly live in marshes, bogs, lakes and river regions. Caribou are considered as an ancient member of the deer family Cervidae (Banfield, 1974). They are smaller than Moose (Alces americanus) and Elk (Cervus canadensis), standing 1.0–1.2 m high at the shoulder (Thomas and Gray, 2002). Due to the caribou is classified as "Vulnerable" on the International Union for the Conservation of Nature's (IUCN) Red List. The data provided for the study of the B.C. Ministry of Environment & Climate Change to report the management and recovery of the caribou.  
 
 Because this data set is used for analysing the reproduction of species, the data is obtained by observation rather than experiment. There is no treatment group and the control group. The time frame of collection was started from 1988 and end of 2016. Movebank captures the locations of individual animals over time by tracking the bio-logging sensors attached to animals (Kranstauber et al., 2011). The data sets were separated into two data files and provided by .csv format. The following are the variables in each data.  
-
 
 - The `individual` data comes from _Mountain caribou in British Columbia-reference-data.csv_. The data contains the relevant information of 286 caribou. The variables are showing in the following table: 
 
@@ -82,12 +84,6 @@ kable(locations_info) %>%
                 position = "left")
 ```
 
-This set of data is primarily used to analyse the changes in the number of caribou from 1988 to 2016 to observe the survival of the species. Is also can be used for further analysis, including:
-- From the location data using location and date variables to analysis, the varies of these habitats by seasonally (summer and winter).
-- According to the  Peace Northern, Caribou Plan endorsed in  November 2012. The goal is to increase the South Peace Northern Caribou to 1,200 animals within 21 years.  By using the data sets we can analyse whether the trend of the number of animals is increasing in the previous years, and also is it possible to achieve the in 2032
-- By analysing the classification of tag deployment end to decide whether the management plan is efficient to increase the number of caribou and whether they have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decide to improve the quality of the tag
-
-
 ```{r read_data}
 # Get the Data
 
@@ -106,7 +102,7 @@ tuesdata <- tidytuesdayR::tt_load(2020, week = 26)
 
 individuals <- tuesdata$individuals
 ```
-
+## Data cleaning processes
 The data being used is the dataset from the Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia available from Movebank (BC Ministry of Environment, 2014). The raw datasets are first read by using read_csv() function. It can be noticed from the raw datasets that the variable names use “-“ instead of “_”. Using dash in a variable name might result to issues, as the valid variable name in R should consist of dot or underline characters. Another problem from this dataset is the values in the “animal-life-stage” consist of spacing, which might lead to issues as it is inconsistent. Another noticeable thing is the datasets have a lot of NA values. Therefore, the data needs to be cleaned by using the tidyverse and janitor libraries.
 
 To clean the individuals data, firstly clean_names() function from the janitor package is used to return the data.frame with clean names.  What this function does is changing the variable names into a tidier form. As mentioned before, using dash in variable names is not appropriate in R. Notice that the raw dataset has names like “deploy-off-latitude” which is changed into “deploy_off_latitude”.  Next is to assigned the result to transmute(), which will compute new columns but will drop existing columns. This is done to make the variable names in a tidier way. The whitespace in the life stage is gotten rid to address inconsistent spacing by using str_remove_all() function. After tidying the variable names with transmute, the “reproductive_condition” variable is separated into “pregnant” and “with_calf” by using the separate() function as this variable actually contains two dimensions, and then assigning those variables into new columns by using the mutate() function which consists of either TRUE or FALSE value.
@@ -167,10 +163,49 @@ write_csv(individuals, "./caribou-location-tracking/individuals.csv")
 write_csv(locations, "./caribou-location-tracking/locations.csv")
 ```
 
+## Possible questions
+This dataset is primarily used to analyse the changes in the number of caribou from 1988 to 2016 to observe the survival of the species. As the management came up with a plan, we would like to analyse whether the management plan is effective in increasing the number of caribou over time.
 
+The primary question to answer from this dataset is __how is the trend of the number of caribou over time?__
+
+From the primary question, we came up with four secondary questions, which are as follows:
+- What can we learn about the population change and sex ratio of the caribou?  
+- Does the location vary between summer and winter?  
+- How is the trend of the classification of tag deployment end (deploy_off_type)?  
+- Has the management plan increased the number of caribou?  
 
 # Analysis and findings
 
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
+
+## Question 3: How is the trend of the classification of tag deployment end (deploy_off_type)?
+
+•	By analysising the classification of tag deployment end to decided whether the management plan is efficient to increase the number of caribou and whether have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decided to improve the quality of the tag
+
+
+## Question 4: Has the management plan increased the number of caribou?
+
+•	According to the  Peace Northern Caribou Plan endorsed in  November 2012. The goal is to increase the South Peace Northern Caribou to 1,200 animals within 21 years.  By using the data sets we can analysis whether the trend of the number of animals are increasing in the previous years, and also is it possible to achieve the in 2032
+
+```{r}
+class(locations$timestamp)
+```
+
+
+```{r}
+locations_wrangled <- locations %>%
+  mutate(month = month(timestamp),
+         day = day(timestamp),
+         date = date(timestamp))
+```
+
+i wanna calculate how many unique animal_id are there per day or per month --> to see the trend of number of  caribou (if its increasing or not)
+
+```{r}
+locations_summary <- locations_wrangled %>% 
+  group_by(date) %>%
+  summarise(animals = unique(animal_id))
+```
+
 
 # References
