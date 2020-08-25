@@ -180,7 +180,26 @@ From the primary question, we came up with four secondary questions, which are a
 
 ## Question 3: How is the trend of the classification of tag deployment end (deploy_off_type)?
 
-•	By analysising the classification of tag deployment end to decided whether the management plan is efficient to increase the number of caribou and whether have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decided to improve the quality of the tag
+•	By analysising the classification of tag deployment end to decided whether the management plan is efficient to increase the number of caribou and whether have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decided to improve the quality of the tag.
+
+```{r}
+tags <- individuals %>%
+  select(deploy_off_type,
+         animal_id,
+         study_site) %>%
+ group_by(deploy_off_type) %>%
+  summarise(count = n())
+```
+```{r}
+individuals %>%
+  group_by(deploy_off_type) %>%
+count(deploy_off_type) %>%
+  ggplot(aes(x = deploy_off_type,
+             y = n)) +
+  geom_col(aes(fill = deploy_off_type))
+```
+
+
 
 
 ## Question 4: Has the management plan increased the number of caribou?
@@ -200,6 +219,10 @@ locations_wrangled <- locations %>%
 ```
 
 i wanna calculate how many unique animal_id are there per day or per month --> to see the trend of number of  caribou (if its increasing or not)
+
+and then create a graph of the number of caribou overtime and put in different lines for different caribou type(the study site) and also make one which is the overall.
+
+so can see which caribou type is the most increasing one
 
 ```{r}
 locations_summary <- locations_wrangled %>% 
