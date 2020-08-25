@@ -241,6 +241,10 @@ individuals_dead %>%
   ylab("Total number of death")
 ```
 
+The highest number of cause of death is predation by wolf, which is almost ..% of the total cause of death, which also includes the suspected wolf predation ones. The other big part of the cause of death includes predation by bear or predation by unknown animals, which concludes that the majority of the death of the caribou was due to predation.
+The other causes such as vehicle collision, train collision, and accidentals are only forming (?) a small part of the death causes.
+However, there is also a big amount of unknown which indicates that the (pengawasan?) isnt that good.
+
 
 
 
