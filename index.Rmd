@@ -180,7 +180,7 @@ From the primary question, we came up with four secondary questions, which are a
 
 ## Question 3: How is the trend of the classification of tag deployment end (deploy_off_type)?
 
-•	By analysising the classification of tag deployment end to decided whether the management plan is efficient to increase the number of caribou and whether have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decided to improve the quality of the tag.
+•	By analysing the classification of tag deployment end to decided whether the management plan is efficient to increase the number of caribou and whether have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decided to improve the quality of the tag.
 
 ```{r}
 tags <- individuals %>%
@@ -194,10 +194,53 @@ tags <- individuals %>%
 individuals %>%
   group_by(deploy_off_type) %>%
 count(deploy_off_type) %>%
-  ggplot(aes(x = deploy_off_type,
+  ggplot(aes(x = reorder(deploy_off_type, -n),
              y = n)) +
   geom_col(aes(fill = deploy_off_type))
 ```
+(add the text showing the number in text)
+
+It can be seen from figure () that out of all the deploy_off_type stated in the description, there are only four types available in the dataset, which are dead, removal, other and unknown. The highest number of ... is unknown, which indicates that there was no proper tracking and documentation. 
+
+As there are several type of deads in the data, we are looking at the cause of dead of caribou in more details. 
+
+```{r}
+individuals_dead <- individuals %>%
+  filter(deploy_off_type == "dead")
+
+#there are some NAs in the death_cause column, thus we omit all the NA from the data
+individuals_dead <- individuals_dead %>%
+  drop_na(death_cause)
+
+#As "Unknown.  Found 50m from TREND open pit mine.  Area littered with rock from blasts from the mine." is too long, we change the name to just "Unknown. Open pit mine."
+
+individuals_dead$death_cause[individuals_dead$death_cause == "Unknown.  Found 50m from TREND open pit mine.  Area littered with rock from blasts from the mine."] <- "Unknown. Open pit mine"
+
+#Unknown.  Suspected wolf (or possibly wolverine) predation is also changed to "Unknown. Suspected wolf predation" to match up with the others.
+
+individuals_dead$death_cause[individuals_dead$death_cause == "Unknown.  Suspected wolf (or possibly wolverine) predation"] <- "Unknown.  Suspected wolf predation"
+
+#also, there are some values that has "." at the end, which makes it creates different category for it, thus we get rid of the "."
+individuals_dead$death_cause[individuals_dead$death_cause == "Unknown.  Suspected wolf predation."] <- "Unknown.  Suspected wolf predation"
+
+#Predation - Grizzly is the same as Predation - Grizzly bear
+individuals_dead$death_cause[individuals_dead$death_cause == "Predation - Grizzly"] <- "Predation - Grizzly Bear"
+
+individuals_dead$death_cause[individuals_dead$death_cause == "Collar still in Field"] <- "Collar Still in Field"
+```
+
+```{r}
+individuals_dead %>%
+  group_by(death_cause) %>%
+  count(death_cause) %>%
+  ggplot(aes(x = reorder(death_cause, n), y = n, fill = death_cause)) +
+  geom_col() +
+  coord_flip() +
+  theme(legend.position = "none") +
+  xlab("Cause of death") +
+  ylab("Total number of death")
+```
+
 
 
 
@@ -230,5 +273,7 @@ locations_summary <- locations_wrangled %>%
   summarise(animals = unique(animal_id))
 ```
 
+
+Conc: in need of better tracking and documentation.
 
 # References
