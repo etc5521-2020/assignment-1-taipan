@@ -246,9 +246,6 @@ The other causes such as vehicle collision, train collision, and accidentals are
 However, there is also a big amount of unknown which indicates that the (pengawasan?) isnt that good.
 
 
-
-
-
 ## Question 4: Has the management plan increased the number of caribou?
 
 •	According to the  Peace Northern Caribou Plan endorsed in  November 2012. The goal is to increase the South Peace Northern Caribou to 1,200 animals within 21 years.  By using the data sets we can analysis whether the trend of the number of animals are increasing in the previous years, and also is it possible to achieve the in 2032
@@ -262,7 +259,14 @@ class(locations$timestamp)
 locations_wrangled <- locations %>%
   mutate(month = month(timestamp),
          day = day(timestamp),
-         date = date(timestamp))
+         date = date(timestamp),
+         year = year(timestamp)) %>%
+  select(month,
+         day,
+         date,
+         year,
+         animal_id,
+         study_site)
 ```
 
 i wanna calculate how many unique animal_id are there per day or per month --> to see the trend of number of  caribou (if its increasing or not)
@@ -273,10 +277,43 @@ so can see which caribou type is the most increasing one
 
 ```{r}
 locations_summary <- locations_wrangled %>% 
-  group_by(date) %>%
+  group_by(year) %>%
   summarise(animals = unique(animal_id))
+
+numbercaribou <- locations_summary %>%
+  group_by(year) %>%
+  summarise(total = n())
+
+numbercaribou %>%
+  ggplot(aes(x = year,
+             y = total)) +
+  geom_line()
 ```
 
+```{r}
+joined_data <- locations_summary %>%
+  left_join(individuals, by = c("animals" = "animal_id"))  %>% 
+  select(year,
+         animals,
+         study_site)
+
+joined_summary <- joined_data %>%
+  group_by(year, study_site) %>%
+  summarise(number = n())
+  
+joined_summary %>%
+  ggplot(aes(x = year,
+             y = number,
+             group = study_site,
+             colour = study_site)) +
+  geom_line()
+```
+
+
+joined with the individuals dataset to add study_site
+
+limitations though cus there might be some caribou that were not tracked in certain years.
+as we are calculating the number of caribou per year by using the documented locations data, it might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
 
 Conc: in need of better tracking and documentation.
 
