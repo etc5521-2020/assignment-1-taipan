@@ -56,6 +56,9 @@ The tracking data was collected by B.C. Ministry of Environment & Climate Change
 
 ## Data Limitation 
 
+There are several limitations associated with this dataset. The most noticeable thing about this dataset is that there are a lot of NAs which causes limited analysis. Not many analysis can be performed because by removing the NAs, there would not be sufficient data left to be analysed and insufficient data would lead to inaccurate result. Another limitation is deploy_off_type mainly consists of "unknown", indicating improper records. This would not lead to accurate analysis. We wanted to see if the equipment failure on the deploy_off_type is many to see if the equipment are working properly or not - and if not, then the quality of the equipment should be improved. However, it turned out that there isn't any equipment failure value in the deploy_off_type. Same thing with the death_cause which consists many "unknown" values. Other than that, there is inconsistent naming of the values inside the dead_cause variable.
+
+
 ```{r}
 vis_miss(individuals)
 ```
