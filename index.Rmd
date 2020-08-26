@@ -186,7 +186,7 @@ From the primary question, we came up with four secondary questions, which are a
 
 In order to answer this question, the individuals dataset is grouped according to the deploy_off_type and then summarised by counting the number of data for each deploy_off_type. To visualise the data, a bar chart is created by using the ggplot() and geom_col() function. 
 
-```{r deploy-off-type, fig.cap="Distribution of the classification of tag deployment end"}
+```{r deploy-off-type, fig.cap="Distribution of the classification of tag deployment end.", fig.align = "center", fig.width=6}
 deploy_type <- individuals %>%
   group_by(deploy_off_type) %>%
 count(deploy_off_type) %>%
@@ -194,18 +194,23 @@ count(deploy_off_type) %>%
              y = n)) +
   geom_col(aes(fill = deploy_off_type)) +
   ggtitle("Classification of tag deployment end") +
-  xlab("Tag deployment type") +
-  ylab("Total number")
+  xlab("Tag deployment end type") +
+  ylab("Total number")  +
+  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        plot.title.position = "plot")
 
 ggplotly(deploy_type)
 ```
 (change the legend title? + benerin format title etc) 
 
-It can be seen from figure \@ref(fig:deploy-off-type) that out of all the deploy_off_type stated in the description, there are only four types available in the dataset, which are dead, removal, other and unknown. The highest number of ... is unknown, which indicates that there was no proper tracking and documentation. 
+It can be seen from figure \@ref(fig:deploy-off-type) that out of all the deploy_off_type stated in the data description, there are only four types available in the dataset, which are dead, removal, other and unknown. The highest number of type, with 99, is unknown, which indicates that there was no proper tracking and documentation. The second highest type is removal, which means that the tag was purposefully removed from the animal. Following removal is dead with 60, which is still a lot. The least number of type is other, which might consist of other deployment end types.
 
-As there are several type of deads in the data, we are looking at the cause of dead of caribou in more details. 
+As there are several data with dead as the deployment end type, we are looking at the cause of death of caribou in more details. It is important to look at the cause of death as understanding the cause of death of the caribou would allow further monitoring of the caribou to minimise their death. To analyse the cause of death, the individuals dataset is wrangled by filtering the deploy_off_type. As there are some NAs in the death_cause column, the NAs are removed. 
 
-```{r}
+And then a bar plot is created and reordered by the number of the death_cause occuring in the data. 
+
+```{r wrangling-data-q3, include=FALSE, message=FALSE, warning=FALSE}
 individuals_dead <- individuals %>%
   filter(deploy_off_type == "dead")
 
@@ -230,33 +235,34 @@ individuals_dead$death_cause[individuals_dead$death_cause == "Predation - Grizzl
 individuals_dead$death_cause[individuals_dead$death_cause == "Collar still in Field"] <- "Collar Still in Field"
 ```
 
-```{r}
-individuals_dead %>%
+```{r plot-death, fig.cap = "Total number of death caused by each cause of death.", fig.align= "center"}
+plot_death <- individuals_dead %>%
   group_by(death_cause) %>%
   count(death_cause) %>%
   ggplot(aes(x = reorder(death_cause, n), y = n, fill = death_cause)) +
   geom_col() +
   coord_flip() +
   theme(legend.position = "none") +
+  ggtitle("Distribution of death per cause of death") +
   xlab("Cause of death") +
-  ylab("Total number of death")
+  ylab("Total number of death") +
+  theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        plot.title.position = "plot")
+
+ggplotly(plot_death)
 ```
 
-The highest number of cause of death is predation by wolf, which is almost ..% of the total cause of death, which also includes the suspected wolf predation ones. The other big part of the cause of death includes predation by bear or predation by unknown animals, which concludes that the majority of the death of the caribou was due to predation.
-The other causes such as vehicle collision, train collision, and accidentals are only forming (?) a small part of the death causes.
-However, there is also a big amount of unknown which indicates that the (pengawasan?) isnt that good.
+It can be seen from figure \@ref(fig:plot-death) that the highest number of cause of death is predation by wolf, which is 18 deaths, if the suspected predation ones are included. The other substantial part of the cause of death includes predation by bear or predation by unknown animals, which concludes that the majority of the death of the caribou was due to predation with around 30% of the total death. The other causes such as vehicle collision, train collision, and accidentals are only partaking a very small part of the death causes.
+However, there is also a significant amount of unknown which indicates that monitoring and documentation is not really good.
+
+What we can learn from the analysis is that the majority cause of calf mortality is predation, primarily by wolf, and it is important to take this into consideration when the management are developing plans to increase the number of caribou. The seasonal habitat change that is compromising spatial separation between caribou and the predators can increase the risk of predation. Grey wolves normally live in low elevations, however they occasionally hunt at higher elevations where caribou live (https://www2.gov.bc.ca/assets/gov/environment/plants-animals-and-ecosystems/wildlife-wildlife-habitat/caribou/science_update_final_from_web_jan_2014.pdf). Another reason for the increasing encounter rate of caribou by wolves is the development of linear features such as pipelines and roads which facilitates rapid and widespread movements of wolves (McKenzie et al., 2012).
 
 
 ## Question 4: Has the management plan increased the number of caribou?
 
-•	According to the  Peace Northern Caribou Plan endorsed in  November 2012. The goal is to increase the South Peace Northern Caribou to 1,200 animals within 21 years.  By using the data sets we can analysis whether the trend of the number of animals are increasing in the previous years, and also is it possible to achieve the in 2032
+According to the Peace Northern Caribou Plan endorsed in November 2012, the goal is to increase the South Peace Northern Caribou to 1,200 animals within 21 years, which has been articulated in implementation plans. Therefore, we are analysing whether the management plan has increased the number of caribou by looking at the number of caribou in the dataset.
 
-```{r}
-class(locations$timestamp)
-```
-
-
-```{r}
+```{r wrangling-locations, include=FALSE, message=FALSE, warning=FALSE}
 locations_wrangled <- locations %>%
   mutate(month = month(timestamp),
          day = day(timestamp),
@@ -268,15 +274,6 @@ locations_wrangled <- locations %>%
          year,
          animal_id,
          study_site)
-```
-
-i wanna calculate how many unique animal_id are there per day or per month --> to see the trend of number of  caribou (if its increasing or not)
-
-and then create a graph of the number of caribou overtime and put in different lines for different caribou type(the study site) and also make one which is the overall.
-
-so can see which caribou type is the most increasing one
-
-```{r}
 locations_summary <- locations_wrangled %>% 
   group_by(year) %>%
   summarise(animals = unique(animal_id))
@@ -284,14 +281,27 @@ locations_summary <- locations_wrangled %>%
 numbercaribou <- locations_summary %>%
   group_by(year) %>%
   summarise(total = n())
-
-numbercaribou %>%
-  ggplot(aes(x = year,
-             y = total)) +
-  geom_line()
 ```
 
-```{r}
+```{r number-caribou, fig.cap="The trend of the number of caribou per year.", fig.align= "center"}
+trendnumber <- numbercaribou %>%
+  ggplot(aes(x = year,
+             y = total)) +
+  geom_line() +
+  ggtitle("Trend of number of caribou yearly") +
+  xlab("Year") +
+  ylab("Total number of caribou")  +
+  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
+        plot.title = element_text(size = 14, face = "bold", hjust= "center"),
+        plot.title.position = "plot")
+
+ggplotly(trendnumber)
+```
+Figure \@ref(fig:number-caribou) presents the trend of the number of caribou yearly according to the locations dataset. It can be noticed that the number of caribou fluctuated overtime. It declined by a significant amount in 2001, however the number increased sharply again in 2002 and 2003, and declined again in 2006. The peak was at 2008, where the number of caribou reached 70, which is more than double the number of caribou in 2006. After 2008, the number decreased again. The management plan which was started to be implemented in 2012 seems to be ineffective as the number of caribou still ranges at around 20-30 caribou.
+
+Next, we are looking at the number of caribou's trend yearly in more details by looking at the trend per study_site. 
+
+```{r wrangling-study-site, include=FALSE, warning=FALSE, message=FALSE}
 joined_data <- locations_summary %>%
   left_join(individuals, by = c("animals" = "animal_id"))  %>% 
   select(year,
@@ -301,23 +311,28 @@ joined_data <- locations_summary %>%
 joined_summary <- joined_data %>%
   group_by(year, study_site) %>%
   summarise(number = n())
-  
-plot4 <- joined_summary %>%
+```
+
+
+```{r number-study-site, fig.cap= "Trend of number of caribou per year according to the study site.", fig.align="center"}
+study_site_trend <- joined_summary %>%
   ggplot(aes(x = year,
              y = number,
              group = study_site,
              colour = study_site)) +
-  geom_line()
+  geom_line() +
+  ggtitle("Trend of number of caribou yearly by study site") +
+  xlab("Year") +
+  ylab("Total number of caribou") +
+  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
+        plot.title = element_text(size = 14, face = "bold"),
+        plot.title.position = "plot")
 
-ggplotly(plot4)
+ggplotly(study_site_trend)
 ```
- 
+Figure \@ref(fig:number-study-site) above is showing the changes in the number of caribou yearly based on the study site. The most noticeable thing here is that not all study sites are being recorded every year, and that the trend of number of caribou varies over the study site. From 1988 to 2001, the only study site being recorded was Hart Ranges, in where there was a huge drop between this period. Most of the other study sites started to be recorded since 2002, except for Scott which started in 2013. Most of the study sites are showing a sharp decline in the number of caribou in 2010, which explains the huge drop in the overall trend mentioned before. The number of caribou in Narraway is super low which is due to the herds that are living in this site tend to stay in the lower-elevation area during summer, thus are more exposed to predation risk. Looking at the number of caribou from 2012, there has not been any significant changes in the number of caribou. Therefore, it appears that the management plan has not increased the number of caribou.
 
-joined with the individuals dataset to add study_site
+So to answer whether the management plan has increased the number of caribou, it appears that the management plan has not increased the number of caribou. And it is unlikely that the number of caribou would increase by that much in 2021. However, this analysis might not be accurate as there are some limitations associated with this analysis. Firstly, some study sites were only being monitored for certain years, which results to inaccurate result to analyse the trend of number of caribou. Secondly, there might be some caribou that were not tracked in certain years as we are calculating the number of caribou per year by using the documented locations data. It might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
 
-limitations though cus there might be some caribou that were not tracked in certain years.
-as we are calculating the number of caribou per year by using the documented locations data, it might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
-
-Conc: in need of better tracking and documentation.
 
 # References
