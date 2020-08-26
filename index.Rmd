@@ -7,7 +7,7 @@ author:
   - Yiwen Jiang
 date: "`r Sys.Date()`"
 output: 
-  html_document
+  bookdown::html_document2
 ---
 
 ```{r setup, echo=FALSE}
@@ -15,6 +15,7 @@ library(tidyverse)
 library(kableExtra)
 library(lubridate)
 library(dplyr)
+library(bookdown)
 library(plotly)
 ```
 
@@ -183,25 +184,24 @@ From the primary question, we came up with four secondary questions, which are a
 
 •	By analysing the classification of tag deployment end to decided whether the management plan is efficient to increase the number of caribou and whether have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decided to improve the quality of the tag.
 
-```{r}
-tags <- individuals %>%
-  select(deploy_off_type,
-         animal_id,
-         study_site) %>%
- group_by(deploy_off_type) %>%
-  summarise(count = n())
-```
-```{r}
-individuals %>%
+In order to answer this question, the individuals dataset is grouped according to the deploy_off_type and then summarised by counting the number of data for each deploy_off_type. To visualise the data, a bar chart is created by using the ggplot() and geom_col() function. 
+
+```{r deploy-off-type, fig.cap="Distribution of the classification of tag deployment end"}
+deploy_type <- individuals %>%
   group_by(deploy_off_type) %>%
 count(deploy_off_type) %>%
   ggplot(aes(x = reorder(deploy_off_type, -n),
              y = n)) +
-  geom_col(aes(fill = deploy_off_type))
-```
-(add the text showing the number in text)
+  geom_col(aes(fill = deploy_off_type)) +
+  ggtitle("Classification of tag deployment end") +
+  xlab("Tag deployment type") +
+  ylab("Total number")
 
-It can be seen from figure () that out of all the deploy_off_type stated in the description, there are only four types available in the dataset, which are dead, removal, other and unknown. The highest number of ... is unknown, which indicates that there was no proper tracking and documentation. 
+ggplotly(deploy_type)
+```
+(change the legend title? + benerin format title etc) 
+
+It can be seen from figure \@ref(fig:deploy-off-type) that out of all the deploy_off_type stated in the description, there are only four types available in the dataset, which are dead, removal, other and unknown. The highest number of ... is unknown, which indicates that there was no proper tracking and documentation. 
 
 As there are several type of deads in the data, we are looking at the cause of dead of caribou in more details. 
 
