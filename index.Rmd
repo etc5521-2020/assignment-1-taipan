@@ -10,7 +10,7 @@ output:
   html_document
 ---
 
-```{r setup, echo=FALSE}
+```{r setup, echo=FALSE, message=FALSE}
 library(tidyverse)
 library(kableExtra)
 library(lubridate)
@@ -56,7 +56,7 @@ The tracking data was collected by B.C. Ministry of Environment & Climate Change
 
 ## Data Limitation 
 
-```{r}
+```{r, echo=FALSE}
 vis_miss(individuals)
 ```
 
