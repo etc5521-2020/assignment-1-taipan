@@ -15,6 +15,7 @@ library(tidyverse)
 library(kableExtra)
 library(lubridate)
 library(dplyr)
+library(plotly)
 ```
 
 
@@ -178,7 +179,7 @@ From the primary question, we came up with four secondary questions, which are a
 
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
 
-## Question 3: How is the trend of the classification of tag deployment end (deploy_off_type)?
+## Question 3: How is the trend of the classification of tag deployment end (deploy_off_type)? What is the highest cause of dead?
 
 •	By analysing the classification of tag deployment end to decided whether the management plan is efficient to increase the number of caribou and whether have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decided to improve the quality of the tag.
 
@@ -301,14 +302,16 @@ joined_summary <- joined_data %>%
   group_by(year, study_site) %>%
   summarise(number = n())
   
-joined_summary %>%
+plot4 <- joined_summary %>%
   ggplot(aes(x = year,
              y = number,
              group = study_site,
              colour = study_site)) +
   geom_line()
-```
 
+ggplotly(plot4)
+```
+ 
 
 joined with the individuals dataset to add study_site
 
