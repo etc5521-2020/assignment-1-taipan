@@ -182,9 +182,7 @@ From the primary question, we came up with four secondary questions, which are a
 
 ## Question 3: How is the trend of the classification of tag deployment end (deploy_off_type)? What is the highest cause of dead?
 
-•	By analysing the classification of tag deployment end to decided whether the management plan is efficient to increase the number of caribou and whether have to modify the tracking method, such as if there is a large proportion of tag deployment end due to the equipment failure, they have to decided to improve the quality of the tag.
-
-In order to answer this question, the individuals dataset is grouped according to the deploy_off_type and then summarised by counting the number of data for each deploy_off_type. To visualise the data, a bar chart is created by using the ggplot() and geom_col() function. 
+In order to answer this question, we analyse the deploy_off_type variable by visualising it on bar charts.
 
 ```{r deploy-off-type, fig.cap="Distribution of the classification of tag deployment end.", fig.align = "center", fig.width=6}
 deploy_type <- individuals %>%
@@ -202,7 +200,6 @@ count(deploy_off_type) %>%
 
 ggplotly(deploy_type)
 ```
-(change the legend title? + benerin format title etc) 
 
 It can be seen from figure \@ref(fig:deploy-off-type) that out of all the deploy_off_type stated in the data description, there are only four types available in the dataset, which are dead, removal, other and unknown. The highest number of type, with 99, is unknown, which indicates that there was no proper tracking and documentation. The second highest type is removal, which means that the tag was purposefully removed from the animal. Following removal is dead with 60, which is still a lot. The least number of type is other, which might consist of other deployment end types.
 
