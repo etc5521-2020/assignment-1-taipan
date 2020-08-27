@@ -52,11 +52,11 @@ This report presents the findings of the woodland caribou between 1988 to 2016 f
 
 ## Motivation
 
-Caribou are the only large herbivore that is widely distributed in the high-elevation habitat and act as agents for plant and lichen diversity through the mechanisms of trampling and foraging. The Caribou has also been a significant resource for indigenous peoples for millennia (@spnc). The survival rate of the Caribou is generally relatively low due to predation by Canis Lupus (wolf). The Caribou listed as "vulnerable" on the International Union for Conservation of Nature (IUCN) Red List. With the Caribou being listed as "Threatened", it is essential to monitor the number of the Caribou as monitoring is vital to effective conservation. We will represent our findings in this report through the exploration of the Caribou tracking data.
+Caribou are the only large herbivore that is widely distributed in the high-elevation habitat and act as agents for plant and lichen diversity through the mechanisms of trampling and foraging. The Caribou has also been a significant resource for indigenous peoples for millennia (@BCMinistry). The survival rate of the Caribou is generally relatively low due to predation by Canis Lupus (wolf). The Caribou listed as "vulnerable" on the International Union for Conservation of Nature (IUCN) Red List. With the Caribou being listed as "Threatened", it is essential to monitor the number of the Caribou as monitoring is vital to effective conservation. We will represent our findings in this report through the exploration of the Caribou tracking data.
 
 ## Data Sources
 
-The tracking data was collected by B.C. Ministry of Environment & Climate Change over 28 years (1988 - 2016), the data was prepared for the study of management and recovery of the caribou (@BCMinistry). It includes the information of 286 Caribou and covered 250,000 locations.
+The tracking data was collected by B.C. Ministry of Environment & Climate Change over 28 years (1988 - 2016), the data was prepared for the study of management and recovery of the caribou. It includes the information of 286 Caribou and covered 250,000 locations.
 
 ## Data Limitation 
 
@@ -79,7 +79,7 @@ The dataset tracks woodland caribou in northern British Columbia, published by t
 
 The boreal woodland caribou, also known as woodland caribou, boreal forest caribou and forest-dwelling caribou, is a North American subspecies of the reindeer with the vast majority of animals in Canada. They prefer lichen-rich mature forests and mainly live in marshes, bogs, lakes and river regions. Caribou are considered as an ancient member of the deer family Cervidae (@banfield). They are smaller than Moose (Alces americanus) and Elk (Cervus canadensis), standing 1.0 - 1.2 meters high at the shoulder (@thomas). Due to the caribou is classified as "Vulnerable" on the International Union for the Conservation of Nature's (IUCN) Red List. The data provided for the study of the B.C. Ministry of Environment & Climate Change to report the management and recovery of the caribou.  
 
-Because this data set is used for analysing the reproduction of species, the data is obtained by observation rather than experiment. There is no treatment group and the control group. The time frame of the collection was started in 1988 and the end of 2016. Movebank collected the locations data of individual animals over time by tracking the biologging sensors attached to animals (Kranstauber et al., 2011). The data sets were separated into two data files and provided by .csv format. The following are the variables in each data.  
+Because this data set is used for analysing the reproduction of species, the data is obtained by observation rather than experiment. There is no treatment group and the control group. The time frame of the collection was started in 1988 and the end of 2016. Movebank collected the locations data of individual animals over time by tracking the biologging sensors attached to animals (@movebank). The data sets were separated into two data files and provided by .csv format. The following are the variables in each data.  
 
 - The `individual` data comes from _Mountain caribou in British Columbia-reference-data.csv_. The data contains the relevant information of 286 caribou. The variables are showing in the Table \@ref(tab:individual-table).  
 
@@ -235,7 +235,7 @@ trend_plot <- ggplot(caribou_trend, aes(x = date, y = count)) +
 ggplotly(trend_plot)
 ```
 
-As showing in Figure \@ref(fig:caribou-trend), the volatility of the number of Caribou tracked are high. The lowest number from 1988 to 2016 is almost 10, but it increased to over fifty by less than five years. The pattern is quite different between 1992 to 2001, that is because there are no tracking records in those years. After 2010, the number of Caribou is decreasing gradually. 
+As showing in Figure \@ref(fig:caribou-trend), the volatility of the number of Caribou tracked are high. The lowest number from 1988 to 2016 is almost ten, but it increased to over fifty by less than five years. The pattern is quite different between 1992 to 2001, that is because there are no tracking records in those years. After 2010, the number of Caribou is decreasing gradually. 
 
 Due to the limitations of this plot, some of the information does not present. For example, what causes the number of the Caribou tracked decreasing, does the equipment failure or death of Caribou. If the reason if equipment failure, there is not reasonable to conclude the number of Caribou changed. We will go further to explore findings from the tracking data of Caribou. That include, do the habitats vary between summer and winter? How is the trend of the classification of tag deployment end (`deploy_off_type`)? Has the management plan increased the number of caribou?   
 
@@ -261,7 +261,7 @@ ggmap(caribou_map) +
 
 The Caribou resides in the British Columbian within eight herd ranges: Hart Ranges, Graham, Moberly, Scott, Burnt Pine, Kennedy Siding, Quintette, and Narraway. Caribou’s habitats vary seasonally to obtain forage, cover, and avoidance from predators. 
 
-Typically, in winter, Caribou will select low-elevation forests or windswept alpine ridges where snow cover is relatively shallow to create and forage for terrestrial lichens. The habitats of different seasons have been coloured and showing in Figure \@ref(fig:caribou_map), red and blue dots are the locations been recorded separately in summer and winter.  Most of Caribou’s habitats overlapped between summer and winter. There still has some difference. In summer, the range of Caribou activities is more concentrated on the mountains, but in winter the range of Caribou activities is flatter.
+Typically, in winter, Caribou will select low-elevation forests or windswept alpine ridges where snow cover is relatively shallow to create and forage for terrestrial lichens. The habitats of different seasons have been coloured and showing in Figure \@ref(fig:caribou-map), red and blue dots are the locations been recorded separately in summer and winter.  Most of Caribou’s habitats overlapped between summer and winter. There still has some difference. In summer, the range of Caribou activities is more concentrated on the mountains, but in winter the range of Caribou activities is flatter.
 
 ```{r fig3, echo=FALSE, fig.cap="Seasonal differences of habitats (Coloured by herds and separated by herds)", fig.align= "center"}
 ggmap(caribou_map) +
@@ -302,7 +302,6 @@ count(deploy_off_type) %>%
   ggplot(aes(x = reorder(deploy_off_type, -n),
              y = n)) +
   geom_col(aes(fill = deploy_off_type)) +
-  ggtitle("Classification of tag deployment end") +
   xlab("Tag deployment end type") +
   ylab("Total number")  +
   theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
@@ -351,7 +350,6 @@ plot_death <- individuals_dead %>%
   geom_col() +
   coord_flip() +
   theme(legend.position = "none") +
-  ggtitle("Distribution of death per cause of death") +
   xlab("Cause of death") +
   ylab("Total number of death") +
   theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
@@ -396,7 +394,6 @@ trendnumber <- numbercaribou %>%
   ggplot(aes(x = year,
              y = total)) +
   geom_line() +
-  ggtitle("Trend of number of caribou yearly") +
   xlab("Year") +
   ylab("Total number of caribou")  +
   theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
@@ -405,6 +402,7 @@ trendnumber <- numbercaribou %>%
 
 ggplotly(trendnumber)
 ```
+
 Figure \@ref(fig:number-caribou) presents the trend of the number of caribou yearly according to the locations dataset. It can be noticed that the number of caribou fluctuated overtime. It declined by a significant amount in 2001, however the number increased sharply again in 2002 and 2003, and declined again in 2006. The peak was at 2008, where the number of caribou reached 70, which is more than double the number of caribou in 2006. After 2008, the number decreased again. The management plan which was started to be implemented in 2012 seems to be ineffective as the number of caribou still ranges at around 20-30 caribou.
 
 Next, we are looking at the number of caribou's trend yearly in more details by looking at the trend per study_site. 
@@ -429,7 +427,6 @@ study_site_trend <- joined_summary %>%
              group = study_site,
              colour = study_site)) +
   geom_line() +
-  ggtitle("Trend of number of caribou yearly by study site") +
   xlab("Year") +
   ylab("Total number of caribou") +
   theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
@@ -438,6 +435,7 @@ study_site_trend <- joined_summary %>%
 
 ggplotly(study_site_trend)
 ```
+
 Figure \@ref(fig:number-study-site) above is showing the changes in the number of caribou yearly based on the study site. The most noticeable thing here is that not all study sites are being recorded every year, and that the trend of number of caribou varies over the study site. From 1988 to 2001, the only study site being recorded was Hart Ranges, in where there was a huge drop between this period. Most of the other study sites started to be recorded since 2002, except for Scott which started in 2013. Most of the study sites are showing a sharp decline in the number of caribou in 2010, which explains the huge drop in the overall trend mentioned before. The number of caribou in Narraway is super low which is due to the herds that are living in this site tend to stay in the lower-elevation area during summer, thus are more exposed to predation risk. Looking at the number of caribou from 2012, there has not been any significant changes in the number of caribou. Therefore, it appears that the management plan has not increased the number of caribou.
 
 So to answer whether the management plan has increased the number of caribou, it appears that the management plan has not increased the number of caribou. And it is unlikely that the number of caribou would increase by that much in 2021. However, this analysis might not be accurate as there are some limitations associated with this analysis. Firstly, some study sites were only being monitored for certain years, which results to inaccurate result to analyse the trend of number of caribou. Secondly, there might be some caribou that were not tracked in certain years as we are calculating the number of caribou per year by using the documented locations data. It might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
@@ -447,7 +445,8 @@ So to answer whether the management plan has increased the number of caribou, it
 Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased.
 
 # Acknowledgement
-Thanks for _tidytuesday_ provided the dataset, relevant articles and cleaning process on GitHub (@tidytuesday). The dataset used is Caribou tracking dataset offered by Movebank Data Repository (@BCMinistry).
-Packages used are @ggplot2, @tidyverse, @plotly, @kableExtra, @lubridate, @dplyr, @naniar, @ggmap, @gghighlight and @visdat, 
+
+Thanks for _tidytuesday_ provided the dataset, relevant articles and cleaning process on GitHub (@tidytuesday). The dataset used is Caribou tracking dataset offered by Movebank Data Repository (@BCMinistry).  
+Packages used are @ggplot2, @tidyverse, @plotly, @kableExtra, @lubridate, @dplyr, @naniar, @ggmap, @gghighlight and @visdat.
 
 # References
