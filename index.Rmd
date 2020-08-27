@@ -8,6 +8,8 @@ author:
 date: "`r Sys.Date()`"
 output: 
   bookdown::html_document2
+bibliography: references.bib
+biblio-style: authoryear-comp
 ---
 
 ```{r setup, echo=FALSE, message=FALSE}
@@ -361,7 +363,7 @@ ggplotly(plot_death)
 It can be seen from figure \@ref(fig:plot-death) that the highest number of cause of death is predation by wolf, which is 18 deaths, if the suspected predation ones are included. The other substantial part of the cause of death includes predation by bear or predation by unknown animals, which concludes that the majority of the death of the caribou was due to predation with around 30% of the total death. The other causes such as vehicle collision, train collision, and accidentals are only partaking a very small part of the death causes.
 However, there is also a significant amount of unknown which indicates that monitoring and documentation is not really good.
 
-What we can learn from the analysis is that the majority cause of calf mortality is predation, primarily by wolf, and it is important to take this into consideration when the management are developing plans to increase the number of caribou. The seasonal habitat change that is compromising spatial separation between caribou and the predators can increase the risk of predation. Grey wolves normally live in low elevations, however they occasionally hunt at higher elevations where caribou live (https://www2.gov.bc.ca/assets/gov/environment/plants-animals-and-ecosystems/wildlife-wildlife-habitat/caribou/science_update_final_from_web_jan_2014.pdf). Another reason for the increasing encounter rate of caribou by wolves is the development of linear features such as pipelines and roads which facilitates rapid and widespread movements of wolves (McKenzie et al., 2012).
+What we can learn from the analysis is that the majority cause of calf mortality is predation, primarily by wolf, and it is important to take this into consideration when the management are developing plans to increase the number of caribou. The seasonal habitat change that is compromising spatial separation between caribou and the predators can increase the risk of predation. Grey wolves normally live in low elevations, however they occasionally hunt at higher elevations where caribou live (@BCMinistry). Another reason for the increasing encounter rate of caribou by wolves is the development of linear features such as pipelines and roads which facilitates rapid and widespread movements of wolves (@predator).
 
 
 ## Question 3: Has the management plan increased the number of caribou?
