@@ -1,6 +1,6 @@
 ---
 title: "ETC5521 Assignment 1"
-subtitle: "Your title"
+subtitle: "Caribou Tracking"
 team: taipan
 author:
   - Helen Evangelina
@@ -211,7 +211,7 @@ From the primary question, we came up with four secondary questions, which are a
 
 To overview the survival of Caribou in different herds, we will first look at the changing on the number of Caribou which have tracked. We use the location data to represent the changing on the number of caribou in each herd. The location data are tracking the location information of each caribou for every four hours; the tracking conducted until tag deployment ended.
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 caribou_trend <- locations %>% 
   separate(timestamp, c("date", "time"), sep = " ") %>% 
   mutate(month = month(date), year = year(date)) %>%
@@ -223,7 +223,7 @@ caribou_trend <- locations %>%
                    format = "%Y-%m-%d"))
 ``` 
 
-```{r caribou-trend, fig.cap="Monthly number of Caribou been tracked between 1988 to 2016", fig.align= "center"}
+```{r caribou-trend, fig.cap="Monthly number of Caribou been tracked between 1988 to 2016", fig.align= "center", echo=FALSE}
 trend_plot <- ggplot(caribou_trend, aes(x = date, y = count)) +
   geom_line() +
   xlab("") +
@@ -239,12 +239,12 @@ Due to the limitations of this plot, some of the information does not present. F
 
 ## Question 1: Do the habitats vary between summer and winter?  
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 # get map data
 caribou_map <- get_map(location = c(-125, 52.5, -119, 57.6), source = "osm") 
 ```
 
-```{r caribou-map, fig.width=15, fig.height=20}
+```{r caribou-map, fig.width=9, fig.height=12, echo=FALSE, fig.cap="Seasonal differences of habitats (Coloured by seasons)", fig.align= "center"}
 ggmap(caribou_map) +
   geom_point(data = locations,
              aes(x = longitude, y = latitude, color = season),
@@ -261,7 +261,7 @@ The Caribou resides in the British Columbian within eight herd ranges: Hart Rang
 
 Typically, in winter, Caribou will select low-elevation forests or windswept alpine ridges where snow cover is relatively shallow to create and forage for terrestrial lichens. The habitats of different seasons have been coloured and showing in Figure \@ref(fig:caribou_map), red and blue dots are the locations been recorded separately in summer and winter.  Most of Caribou’s habitats overlapped between summer and winter. There still has some difference. In summer, the range of Caribou activities is more concentrated on the mountains, but in winter the range of Caribou activities is flatter.
 
-```{r}
+```{r fig3, echo=FALSE, fig.cap="Seasonal differences of habitats (Coloured by herds and separated by herds)", fig.align= "center"}
 ggmap(caribou_map) +
   geom_point(data = locations, 
              aes(longitude, latitude, col = study_site), size = 0.3, alpha = 0.9) +
@@ -269,13 +269,12 @@ ggmap(caribou_map) +
   palettetown::scale_colour_poke(pokemon = "golbat") +
   guides(colour = guide_legend(title = "Herd", override.aes = list(size = 4))) +
   facet_wrap(~season, strip.position = "bottom") +
-  labs(title = "Seasonal differences of habitats (Coloured by herds)") +
   theme_void() 
 ```
 
-Then we separate the habitats with seasonality and coloured by the herds; it is present in Figure 3. We can observe that some of the locations are the difference between seasons. Compared to summer, Caribou in the same herd are more concentrated in winter. In summer, most of the Caribou migrate towards the central core of the Rocky Mountains (high-elevation habitats) because wolves live primarily at low-elevation that spatial separation can help to avoid predators. This plot is still hard to analysis the difference of habitats for each herd because the habitats of some herds overlapped. For example, the dots where the Burnt Pine herd inhabits covered by the Kennedy herd.
+Then we separate the habitats with seasonality and coloured by the herds; it is present in  \@ref(fig:fig3). We can observe that some of the locations are the difference between seasons. Compared to summer, Caribou in the same herd are more concentrated in winter. In summer, most of the Caribou migrate towards the central core of the Rocky Mountains (high-elevation habitats) because wolves live primarily at low-elevation that spatial separation can help to avoid predators. This plot is still hard to analysis the difference of habitats for each herd because the habitats of some herds overlapped. For example, the dots where the Burnt Pine herd inhabits covered by the Kennedy herd.
 
-```{r, fig.width=15, fig.height=20}
+```{r fig4, fig.width=15, fig.height=20, fig.cap="Seasonal differences of habitats (Separated by herds and seasons)", fig.align= "center", echo=FALSE}
 ggmap(caribou_map) +
   geom_point(data = locations,
              aes(x = longitude, y = latitude, color = season),
@@ -288,9 +287,9 @@ ggmap(caribou_map) +
   facet_wrap(study_site~season, ncol = 4)
 ```
 
-In Figure 4, the map has separated by seasons and herds. The red dot represents summer, and blue one represents winter. It presents the variety of habitats between seasons across herds. Burnt Pine, Kennedy, Narraway and Scott herds show the Caribou are getting much closer in winter comparing with summer. From Narraway we can observe that Caribou move from mountains to flatten area in winter more.
+In Figure  \@ref(fig:fig4), the map has separated by seasons and herds. The red dot represents summer, and blue one represents winter. It presents the variety of habitats between seasons across herds. Burnt Pine, Kennedy, Narraway and Scott herds show the Caribou are getting much closer in winter comparing with summer. From Narraway we can observe that Caribou move from mountains to flatten area in winter more.
 
-## Question 3: How is the trend of the classification of tag deployment end (deploy_off_type)? What is the highest cause of dead?
+## Question 2: How is the trend of the classification of tag deployment end (deploy_off_type)? What is the highest cause of dead?
 
 In order to answer this question, we analyse the deploy_off_type variable by visualising it on bar charts.
 
@@ -365,7 +364,7 @@ However, there is also a significant amount of unknown which indicates that moni
 What we can learn from the analysis is that the majority cause of calf mortality is predation, primarily by wolf, and it is important to take this into consideration when the management are developing plans to increase the number of caribou. The seasonal habitat change that is compromising spatial separation between caribou and the predators can increase the risk of predation. Grey wolves normally live in low elevations, however they occasionally hunt at higher elevations where caribou live (https://www2.gov.bc.ca/assets/gov/environment/plants-animals-and-ecosystems/wildlife-wildlife-habitat/caribou/science_update_final_from_web_jan_2014.pdf). Another reason for the increasing encounter rate of caribou by wolves is the development of linear features such as pipelines and roads which facilitates rapid and widespread movements of wolves (McKenzie et al., 2012).
 
 
-## Question 4: Has the management plan increased the number of caribou?
+## Question 3: Has the management plan increased the number of caribou?
 
 According to the Peace Northern Caribou Plan endorsed in November 2012, the goal is to increase the South Peace Northern Caribou to 1,200 animals within 21 years, which has been articulated in implementation plans. Therefore, we are analysing whether the management plan has increased the number of caribou by looking at the number of caribou in the dataset.
 
@@ -441,5 +440,8 @@ Figure \@ref(fig:number-study-site) above is showing the changes in the number o
 
 So to answer whether the management plan has increased the number of caribou, it appears that the management plan has not increased the number of caribou. And it is unlikely that the number of caribou would increase by that much in 2021. However, this analysis might not be accurate as there are some limitations associated with this analysis. Firstly, some study sites were only being monitored for certain years, which results to inaccurate result to analyse the trend of number of caribou. Secondly, there might be some caribou that were not tracked in certain years as we are calculating the number of caribou per year by using the documented locations data. It might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
 
+# Conclusion
+
+Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators.
 
 # References
