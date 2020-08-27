@@ -293,7 +293,7 @@ In Figure  \@ref(fig:fig4), the map has separated by seasons and herds. The red 
 
 In order to answer this question, we analyse the deploy_off_type variable by visualising it on bar charts.
 
-```{r deploy-off-type, fig.cap="Distribution of the classification of tag deployment end.", fig.align = "center", fig.width=6}
+```{r deploy-off-type, fig.cap="Distribution of the classification of tag deployment end.", fig.align= "center", fig.width=6, echo = FALSE}
 deploy_type <- individuals %>%
   group_by(deploy_off_type) %>%
 count(deploy_off_type) %>%
@@ -310,7 +310,7 @@ count(deploy_off_type) %>%
 ggplotly(deploy_type)
 ```
 
-It can be seen from figure \@ref(fig:deploy-off-type) that out of all the deploy_off_type stated in the data description, there are only four types available in the dataset, which are dead, removal, other and unknown. The highest number of type, with 99, is unknown, which indicates that there was no proper tracking and documentation. The second highest type is removal, which means that the tag was purposefully removed from the animal. Following removal is dead with 60, which is still a lot. The least number of type is other, which might consist of other deployment end types.
+It can be seen from figure \@ref(fig:deploy-off-type) that out of all the deploy_off_type stated in the data description, there are only four types available in the dataset, which are dead, removal, other and unknown. The highest number of type is unknown, with 99, which indicates that there was no proper tracking and documentation. The second highest type is removal, which means that the tag was purposefully removed from the animal. Following removal is dead with 60, which is still a lot. The least number of type is other, which might consist of other deployment end types.
 
 As there are several data with dead as the deployment end type, we are looking at the cause of death of caribou in more details. It is important to look at the cause of death as understanding the cause of death of the caribou would allow further monitoring of the caribou to minimise their death. To analyse the cause of death, the individuals dataset is wrangled by filtering the deploy_off_type. As there are some NAs in the death_cause column, the NAs are removed. 
 
@@ -341,7 +341,7 @@ individuals_dead$death_cause[individuals_dead$death_cause == "Predation - Grizzl
 individuals_dead$death_cause[individuals_dead$death_cause == "Collar still in Field"] <- "Collar Still in Field"
 ```
 
-```{r plot-death, fig.cap = "Total number of death caused by each cause of death.", fig.align= "center"}
+```{r plot-death, fig.cap = "Total number of death caused by each cause of death.", fig.align= "center", echo=FALSE}
 plot_death <- individuals_dead %>%
   group_by(death_cause) %>%
   count(death_cause) %>%
@@ -389,7 +389,7 @@ numbercaribou <- locations_summary %>%
   summarise(total = n())
 ```
 
-```{r number-caribou, fig.cap="The trend of the number of caribou per year.", fig.align= "center"}
+```{r number-caribou, fig.cap="The trend of the number of caribou per year.", fig.align= "center", echo=FALSE, message=FALSE, warning=FALSE}
 trendnumber <- numbercaribou %>%
   ggplot(aes(x = year,
              y = total)) +
@@ -420,7 +420,7 @@ joined_summary <- joined_data %>%
 ```
 
 
-```{r number-study-site, fig.cap= "Trend of number of caribou per year according to the study site.", fig.align="center"}
+```{r number-study-site, fig.cap= "Trend of number of caribou per year according to the study site.", fig.align= "center", echo=FALSE, message=FALSE, warning=FALSE}
 study_site_trend <- joined_summary %>%
   ggplot(aes(x = year,
              y = number,
@@ -442,6 +442,6 @@ So to answer whether the management plan has increased the number of caribou, it
 
 # Conclusion
 
-Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators.
+Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased.
 
 # References
