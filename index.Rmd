@@ -20,9 +20,10 @@ library(ggmap)
 library(gghighlight)
 library(bookdown)
 library(plotly)
+library(visdat)
 ```
 
-```{r read_data, message=FALSE, include=FALSE}
+```{r read_data, message=FALSE, echo=FALSE}
 # Get the Data
 
 individuals <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-23/individuals.csv')
@@ -34,11 +35,11 @@ locations <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/
 
 # Install via devtools::install_github("thebioengineer/tidytuesdayR")
 
-tuesdata <- tidytuesdayR::tt_load('2020-06-23')
-tuesdata <- tidytuesdayR::tt_load(2020, week = 26)
-
-
-individuals <- tuesdata$individuals
+# tuesdata <- tidytuesdayR::tt_load('2020-06-23')
+# tuesdata <- tidytuesdayR::tt_load(2020, week = 26)
+# 
+# 
+# individuals <- tuesdata$individuals
 ```
 
 [This assignment is for ETC5521 Assignment 1 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
@@ -58,7 +59,8 @@ The tracking data was collected by B.C. Ministry of Environment & Climate Change
 ## Data Limitation 
 
 ```{r individuals-na, echo=FALSE, fig.cap="Visualise the missing value in individuals data", fig.align= "center"}
-vis_miss(individuals, sort_miss = TRUE)
+individuals %>%
+  vis_miss(sort_miss = TRUE)
 ```
 
 - There are several limitations associated with this dataset. The most noticeable thing about this dataset is that there are a lot of NAs which causes limited analysis. We observe that in the `individuals` data over half of the values are missing (Refer to Figure \@ref(fig:individuals-na)). Not many analysis can be performed because by removing the NAs, there would not be sufficient data left to be analysed and insufficient data would lead to inaccurate result. For example, in the pregnant variable, there are 93.36% of the values missing. 
@@ -77,9 +79,9 @@ The boreal woodland caribou, also known as woodland caribou, boreal forest carib
 
 Because this data set is used for analysing the reproduction of species, the data is obtained by observation rather than experiment. There is no treatment group and the control group. The time frame of the collection was started in 1988 and the end of 2016. Movebank collected the locations data of individual animals over time by tracking the biologging sensors attached to animals (Kranstauber et al., 2011). The data sets were separated into two data files and provided by .csv format. The following are the variables in each data.  
 
-- The `individual` data comes from _Mountain caribou in British Columbia-reference-data.csv_. The data contains the relevant information of 286 caribou. The variables are showing in the following table:  
+- The `individual` data comes from _Mountain caribou in British Columbia-reference-data.csv_. The data contains the relevant information of 286 caribou. The variables are showing in the Table \@ref(tab:individual-table).  
 
-```{r individual_table, echo=FALSE}
+```{r individual-table, echo=FALSE}
 individual_info <- tibble(Variable = c("animal_id", "sex", "life_stage", "pregnant", "with_calf", 
                                        "death_cause", "study_site", "deploy_on_longitude", 
                                        "deploy_on_latitude", "deploy_on_comments", "deploy_off_longitude",
@@ -102,15 +104,17 @@ individual_info <- tibble(Variable = c("animal_id", "sex", "life_stage", "pregna
                                           "Classification of tag deployment end (see table below for full description", 
                                           "Additional information about tag deployment end")) 
 
-kable(individual_info) %>%
+individual_info %>%
+  kable(booktabs = TRUE,
+        caption = "Variables in individuals data") %>%
   kable_styling(bootstrap_options = "striped", 
                 full_width = F, 
                 position = "left")
 ```
 
-- The `location` comes from _Mountain caribou in British Columbia-gps.csv_. The data contains location information of each counted caribous for every four fours.
+- The `locations` comes from _Mountain caribou in British Columbia-gps.csv_. The data contains location information of each counted caribous for every four fours. The variables are showing in the Table \@ref(tab:locations-table).  
 
-```{r locations_table, echo=FALSE}
+```{r locations-table, echo=FALSE}
 locations_info <- tibble(Variable = c("event_id", "animal_id", "study_site", "season", "timestamp", "longitude", "latitude"),
                           Class = c("double", "character", "character", "character", "datetime", "double", "double"),
                           Description = c("Identifier for an individual measurement", 
@@ -121,21 +125,22 @@ locations_info <- tibble(Variable = c("event_id", "animal_id", "study_site", "se
                                           "Longitude of measurement",
                                           "Latitude of measurement")) 
 
-kable(locations_info) %>%
+locations_info %>%
+  kable(booktabs = TRUE,
+        caption = "Variables in individuals data") %>%
   kable_styling(bootstrap_options = "striped", 
                 full_width = F, 
-                position = "left",
-                border_left = "2px solid gray",
-                border_right = "2px solid gray")
+                position = "left")
 ```
 
 
 ## Data cleaning processes
-The data being used is the dataset from the Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia available from Movebank (BC Ministry of Environment, 2014). The raw datasets are first read by using read_csv() function. It can be noticed from the raw datasets that the variable names use “-“ instead of “_”. Using dash in a variable name might result to issues, as the valid variable name in R should consist of dot or underline characters. Another problem from this dataset is the values in the “animal-life-stage” consist of spacing, which might lead to issues as it is inconsistent. Another noticeable thing is the datasets have a lot of NA values. Therefore, the data needs to be cleaned by using the tidyverse and janitor libraries.
 
-To clean the individuals data, firstly clean_names() function from the janitor package is used to return the data.frame with clean names.  What this function does is changing the variable names into a tidier form. As mentioned before, using dash in variable names is not appropriate in R. Notice that the raw dataset has names like “deploy-off-latitude” which is changed into “deploy_off_latitude”.  Next is to assigned the result to transmute(), which will compute new columns but will drop existing columns. This is done to make the variable names in a tidier way. The whitespace in the life stage is gotten rid to address inconsistent spacing by using str_remove_all() function. After tidying the variable names with transmute, the “reproductive_condition” variable is separated into “pregnant” and “with_calf” by using the separate() function as this variable actually contains two dimensions, and then assigning those variables into new columns by using the mutate() function which consists of either TRUE or FALSE value.
+The data being used is the dataset from the Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia available from Movebank (BC Ministry of Environment, 2014). The raw datasets are first read by using `read_csv()` function. It can be noticed from the raw datasets that the variable names use "-" instead of "_". Using dash in a variable name might result in issues, as the valid variable name in R should consist of dot or underline characters. Another problem from this dataset is the values in the “animal-life-stage” consist of spacing, which might lead to issues as it is inconsistent. Another noticeable thing is the datasets have a lot of NA values. Therefore, the data needs to be cleaned by using the _tidyverse_ and _janitor_ libraries.
 
-The locations data is cleaned by using the same method as the individuals data, which includes cleaning the name first by using clean_names() function to arrive to a data.frame with clean names. The next step is to use transmute() function to compute new columns with dropping existing columns. After cleaning both datasets, the final datasets are written into csv format by using write_csv() function.
+To clean the `individuals` data, firstly `clean_names()` function from the _janitor_ package is used to return the data.frame with clean names.  What this function does is changing the variable names into a tidier form. As mentioned before, using dash in variable names is not appropriate in R. Notice that the raw dataset has names like “deploy-off-latitude” which is changed into “deploy_off_latitude”.  Next is to assigned the result to `transmute()`, which will compute new columns but will drop existing columns. This is done to make the variable names in a tidier way. The whitespace in the life stage is gotten rid to address inconsistent spacing by using `str_remove_all()` function. After tidying the variable names with transmuting, the “reproductive_condition” variable is separated into “pregnant” and "with_calf" by using the `separate()` function as this variable actually contains two dimensions, and then assigning those variables into new columns by using the `mutate()` function which consists of either TRUE or FALSE value.
+
+The `locations` data is cleaned by using the same method as the `individuals` data, which includes cleaning the name first by using `clean_names()` function to arrive at a data.frame with clean names. The next step is to use `transmute()` function to compute new columns with dropping existing columns. After cleaning both datasets, the final datasets are written into `csv` format by using `write_csv()` function.
 
 ```{r data_cleaning, eval=FALSE}
 # Load libraries
@@ -192,16 +197,19 @@ write_csv(locations, "./caribou-location-tracking/locations.csv")
 ```
 
 ## Possible questions
+
 This dataset is primarily used to analyse the changes in the number of caribou from 1988 to 2016 to observe the survival of the species. As the management came up with a plan, we would like to analyse whether the management plan is effective in increasing the number of caribou over time.
 
 The primary question to answer from this dataset is __how is the trend of the number of caribou over time?__
 
-From the primary question, we came up with four secondary questions, which are as follows:
-- Does the habitats vary between summer and winter?  
-- How is the trend of the classification of tag deployment end (deploy_off_type)?  
+From the primary question, we came up with four secondary questions, which are as follows:  
+- Do the habitats vary between summer and winter?  
+- How is the trend of the classification of tag deployment end (`deploy_off_type`)?  
 - Has the management plan increased the number of caribou?  
 
 # Analysis and findings
+
+To overview the survival of Caribou in different herds, we will first look at the changing on the number of Caribou which have tracked. We use the location data to represent the changing on the number of caribou in each herd. The location data are tracking the location information of each caribou for every four hours; the tracking conducted until tag deployment ended.
 
 ```{r}
 caribou_trend <- locations %>% 
@@ -215,7 +223,7 @@ caribou_trend <- locations %>%
                    format = "%Y-%m-%d"))
 ``` 
 
-```{r, fig.cap="Monthly number of Caribou been tracked between 1988 to 2016"}
+```{r caribou-trend, fig.cap="Monthly number of Caribou been tracked between 1988 to 2016", fig.align= "center"}
 trend_plot <- ggplot(caribou_trend, aes(x = date, y = count)) +
   geom_line() +
   xlab("") +
@@ -225,17 +233,18 @@ trend_plot <- ggplot(caribou_trend, aes(x = date, y = count)) +
 ggplotly(trend_plot)
 ```
 
+As showing in Figure \@ref(fig:caribou-trend), the volatility of the number of Caribou tracked are high. The lowest number from 1988 to 2016 is almost 10, but it increased to over fifty by less than five years. The pattern is quite different between 1992 to 2001, that is because there are no tracking records in those years. After 2010, the number of Caribou is decreasing gradually. 
 
-[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
+Due to the limitations of this plot, some of the information does not present. For example, what causes the number of the Caribou tracked decreasing, does the equipment failure or death of Caribou. If the reason if equipment failure, there is not reasonable to conclude the number of Caribou changed. We will go further to explore findings from the tracking data of Caribou. That include, do the habitats vary between summer and winter? How is the trend of the classification of tag deployment end (`deploy_off_type`)? Has the management plan increased the number of caribou?   
 
-## Question 1: What can we learn about the sex ratio and population change of the caribou? 
+## Question 1: Do the habitats vary between summer and winter?  
 
 ```{r}
 # get map data
 caribou_map <- get_map(location = c(-125, 52.5, -119, 57.6), source = "osm") 
 ```
 
-```{r, fig.width=15, fig.height=20}
+```{r caribou-map, fig.width=15, fig.height=20}
 ggmap(caribou_map) +
   geom_point(data = locations,
              aes(x = longitude, y = latitude, color = season),
@@ -247,6 +256,10 @@ ggmap(caribou_map) +
         axis.text = element_blank(),
         axis.ticks = element_blank())
 ```
+
+The Caribou resides in the British Columbian within eight herd ranges: Hart Ranges, Graham, Moberly, Scott, Burnt Pine, Kennedy Siding, Quintette, and Narraway. Caribou’s habitats vary seasonally to obtain forage, cover, and avoidance from predators. 
+
+Typically, in winter, Caribou will select low-elevation forests or windswept alpine ridges where snow cover is relatively shallow to create and forage for terrestrial lichens. The habitats of different seasons have been coloured and showing in Figure \@ref(fig:caribou_map), red and blue dots are the locations been recorded separately in summer and winter.  Most of Caribou’s habitats overlapped between summer and winter. There still has some difference. In summer, the range of Caribou activities is more concentrated on the mountains, but in winter the range of Caribou activities is flatter.
 
 ```{r}
 ggmap(caribou_map) +
@@ -260,6 +273,7 @@ ggmap(caribou_map) +
   theme_void() 
 ```
 
+Then we separate the habitats with seasonality and coloured by the herds; it is present in Figure 3. We can observe that some of the locations are the difference between seasons. Compared to summer, Caribou in the same herd are more concentrated in winter. In summer, most of the Caribou migrate towards the central core of the Rocky Mountains (high-elevation habitats) because wolves live primarily at low-elevation that spatial separation can help to avoid predators. This plot is still hard to analysis the difference of habitats for each herd because the habitats of some herds overlapped. For example, the dots where the Burnt Pine herd inhabits covered by the Kennedy herd.
 
 ```{r, fig.width=15, fig.height=20}
 ggmap(caribou_map) +
@@ -273,6 +287,8 @@ ggmap(caribou_map) +
         axis.ticks = element_blank()) +
   facet_wrap(study_site~season, ncol = 4)
 ```
+
+In Figure 4, the map has separated by seasons and herds. The red dot represents summer, and blue one represents winter. It presents the variety of habitats between seasons across herds. Burnt Pine, Kennedy, Narraway and Scott herds show the Caribou are getting much closer in winter comparing with summer. From Narraway we can observe that Caribou move from mountains to flatten area in winter more.
 
 ## Question 3: How is the trend of the classification of tag deployment end (deploy_off_type)? What is the highest cause of dead?
 

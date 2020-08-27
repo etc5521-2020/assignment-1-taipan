@@ -1,16 +1,29 @@
 ---
-title: "Assignment 1"
-author: "Helen Evangelina"
-date: "8/12/2020"
-output: html_document
+title: "ETC5521 Assignment 1"
+subtitle: "Your title"
+team: taipan
+author:
+  - Helen Evangelina
+  - Yiwen Jiang
+date: "`r Sys.Date()`"
+output: 
+  bookdown::html_document2
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(lubridate)
+library(dplyr)
+library(naniar)
+library(ggmap)
+library(gghighlight)
+library(bookdown)
+library(plotly)
+library(visdat)
 ```
 
-```{r}
-```{r}
+```{r read_data, message=FALSE, include=FALSE}
 # Get the Data
 
 individuals <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-23/individuals.csv')
@@ -28,5 +41,30 @@ tuesdata <- tidytuesdayR::tt_load(2020, week = 26)
 
 individuals <- tuesdata$individuals
 ```
+
+[This assignment is for ETC5521 Assignment 1 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
+
+# Introduction and motivation
+
+This report presents the findings of the woodland caribou between 1988 to 2016 following the tracking data conducted under B.C. Ministry of Environment & Climate Change. This report mainly analyses the changes in the number of woodland caribou, and other analyses include the habitats changes caused by seasonal differences, the effects of the implementation of management plans and the causes of tag deployment ended. In the following section, we will describe the data set, where the data came from, and what is the data prepared for. The data description also includes how we transform and clean the raw data for analysis. Our statistical programming used for analysis is _R_ and _Rstudio_.
+
+## Motivation
+
+Caribou are the only large herbivore that is widely distributed in the high-elevation habitat and act as agents for plant and lichen diversity through the mechanisms of trampling and foraging. The Caribou has also been a significant resource for indigenous peoples for millennia. (BC Ministry of Environment (2014)). The survival rate of the Caribou is generally relatively low due to predation by Canis Lupus (wolf). The Caribou listed as "vulnerable" on the International Union for Conservation of Nature (IUCN) Red List. With the Caribou being listed as "Threatened", it is essential to monitor the number of the Caribou as monitoring is vital to effective conservation. We will represent our findings in this report through the exploration of the Caribou tracking data.
+
+## Data Sources
+
+The tracking data was collected by B.C. Ministry of Environment & Climate Change over 28 years (1988 - 2016), the data was prepared for the study of management and recovery of the caribou. It includes the information of 286 Caribou and covered 250,000 locations.
+
+## Data Limitation 
+
+
+```{r individuals-na, echo=FALSE, fig.cap="Visualise the missing value in individuals data", fig.align= "center"}
+vis_miss(individuals, sort_miss = TRUE)
 ```
 
+- There are several limitations associated with this dataset. The most noticeable thing about this dataset is that there are a lot of NAs which causes limited analysis. We observe that in the `individuals` data over half of the values are missing (Refer to Figure \@ref(fig:individuals-na)). Not many analysis can be performed because by removing the NAs, there would not be sufficient data left to be analysed and insufficient data would lead to inaccurate result. For example, in the pregnant variable, there are 93.36% of the values missing. 
+
+-	The Caribou has a low reproductive rate due to females only have one calf per year, and females do not reproduce until they are two years old. To analysis, the sex ratio should be a good indicator of the trend of the number of Caribou. However, there are only five males Caribou out of 286. The analysis result will exist bias when we use the sex ratio as an indicator.
+
+- Another limitation is deploy_off_type mainly consists of "unknown", indicating improper records. This would not lead to accurate analysis. We wanted to see if the equipment failure on the deploy_off_type is many to see if the equipment are working properly or not - and if not, then the quality of the equipment should be improved. However, it turned out that there isn't any equipment failure value in the deploy_off_type. Same thing with the death_cause which consists many "unknown" values. Other than that, there is inconsistent naming of the values inside the dead_cause variable.
