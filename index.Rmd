@@ -208,6 +208,7 @@ From the primary question, we came up with four secondary questions, which are a
 - Do the habitats vary between summer and winter?  
 - How is the trend of the classification of tag deployment end (`deploy_off_type`)?  
 - Has the management plan increased the number of caribou?  
+- Which life stage has the highest death rate?
 
 # Analysis and findings
 
