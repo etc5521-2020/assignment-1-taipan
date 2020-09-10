@@ -210,6 +210,7 @@ From the primary question, we came up with four secondary questions, which are a
 - Has the management plan increased the number of caribou?
 
 - How are having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
+- Which life stage has the highest death rate? 
 
 # Analysis and findings
 
