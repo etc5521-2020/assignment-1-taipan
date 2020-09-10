@@ -208,7 +208,9 @@ From the primary question, we came up with four secondary questions, which are a
 - Do the habitats vary between summer and winter?  
 - How is the trend of the classification of tag deployment end (`deploy_off_type`)?  
 - Has the management plan increased the number of caribou?  
+- How are having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
 - Which life stage has the highest deathrate
+
 # Analysis and findings
 
 To overview the survival of Caribou in different herds, we will first look at the changing on the number of Caribou which have tracked. We use the location data to represent the changing on the number of caribou in each herd. The location data are tracking the location information of each caribou for every four hours; the tracking conducted until tag deployment ended.
