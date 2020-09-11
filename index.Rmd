@@ -210,7 +210,7 @@ From the primary question, we came up with four secondary questions, which are a
 - Has the management plan increased the number of caribou?  
 - Which life stage has the highest death rate? 
 
-# Analysis and findings
+# Analysis and findings 
 
 To overview the survival of Caribou in different herds, we will first look at the changing on the number of Caribou which have tracked. We use the location data to represent the changing on the number of caribou in each herd. The location data are tracking the location information of each caribou for every four hours; the tracking conducted until tag deployment ended.
 
