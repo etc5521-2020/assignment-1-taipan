@@ -440,6 +440,89 @@ Figure \@ref(fig:number-study-site) above is showing the changes in the number o
 
 So to answer whether the management plan has increased the number of caribou, it appears that the management plan has not increased the number of caribou. And it is unlikely that the number of caribou would increase by that much in 2021. However, this analysis might not be accurate as there are some limitations associated with this analysis. Firstly, some study sites were only being monitored for certain years, which results to inaccurate result to analyse the trend of number of caribou. Secondly, there might be some caribou that were not tracked in certain years as we are calculating the number of caribou per year by using the documented locations data. It might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
 
+## Question 4: How are seasons reflecting the outcomes as tag deployment ends (deploy_off_type)?
+```{r}
+fourseason <- locations_wrangled %>%
+  mutate(locations_wrangled, season = case_when(month %in% c("12", "1", "2") ~ "Winter",
+                                                month %in% c("3", "4", "5") ~ "Spring",
+                                                month %in% c("6", "7", "8") ~ "Summer",
+                                                month %in% c("9", "10", "11") ~ "Autumn")) 
+season_summary <- fourseason %>% 
+  group_by(season, study_site) %>%
+  summarise(animals = unique(animal_id, .groups = 'drop')) 
+  
+number_season <- season_summary %>%
+  group_by(season, study_site) %>%
+  summarise(total = n())
+```
+
+```{r}
+season_site_plot <- ggplot(transform(number_season,
+                                     season = factor(season, levels = c("Spring",
+                                                                        "Summer",
+                                                                        "Autumn",
+                                                                        "Winter")))) +
+  geom_col(aes(reorder(study_site, -total), total, fill = study_site)) +
+  facet_wrap(season~., ncol = 4) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylab("Total number") +
+  xlab("Study site") 
+
+ggplotly(season_site_plot)
+```
+
+```{r}
+library(hrbrthemes)
+season_num <- fourseason %>% 
+  group_by(season) %>%
+  summarise(animals = unique(animal_id, .groups = 'drop')) %>%
+  group_by(animals) %>%
+  summarise_all(n_distinct)
+
+count_season <- season_num %>%
+  group_by(season) %>%
+  count()
+
+season_num_plot <- ggplot(count_season, aes(x=season, y=n)) +
+    geom_line(aes(y = n)) +
+    scale_color_viridis(discrete = TRUE) +
+    theme(
+      legend.position="none",
+      plot.title = element_text(size=14)
+    ) +
+  xlab("Tracking duration (number of season)") +
+  ylab("Number of Caribou")
+    ggtitle("Number of Caribou") +
+    theme_ipsum()
+ggplotly(season_num_plot)
+```
+
+```{r}
+i_keep_duplicate_last <- individuals %>%
+  group_by(animal_id) %>%
+  slice(n())
+
+season_j_ind <- season_num %>%
+  left_join(i_keep_duplicate_last, by = c("animals" = "animal_id"))
+
+season_ind_count <- season_j_ind %>%
+  select(season, deploy_off_type) %>%
+  group_by(season, deploy_off_type) %>%
+  count() 
+
+# season 4 other, dead, removal, unknow how many percentage for each
+# season 3 ...
+# season 2 ...
+# season 1...
+b <- ggplot(season_ind_count, aes(fill=deploy_off_type, y=n, x=season)) + 
+    geom_bar(position="stack", stat="identity") +
+    scale_fill_viridis(discrete = T) +
+    ggtitle("Number of Caribou by each of their duration of tracking") +
+    xlab("Deployment season duration") +
+    ylab("count")
+ggplotly(b)
+```
+
 # Conclusion
 
 Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased.
