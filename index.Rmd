@@ -473,31 +473,31 @@ ggplotly(season_site_plot)
 
 ```{r}
 library(hrbrthemes)
-season_num <- fourseason %>% 
-  group_by(season) %>%
+season_num <- fourseason %>%
+  group_by(year, season) %>%
   summarise(animals = unique(animal_id, .groups = 'drop')) %>%
   group_by(animals) %>%
-  summarise_all(n_distinct)
+  summarise_all(n_distinct) %>%
+  mutate(`Total season number` = year*season) 
 
 count_season <- season_num %>%
-  group_by(season) %>%
-  count()
+  count(`Total season number`)
 
-season_num_plot <- ggplot(count_season, aes(x=season, y=n)) +
+season_num_plot <- ggplot(count_season, aes(x=`Total season number`, y=n)) +
     geom_line(aes(y = n)) +
-    scale_color_viridis(discrete = TRUE) +
+    geom_point(shape=21, color="black", fill="#69b3a2", size=2) +
     theme(
       legend.position="none",
       plot.title = element_text(size=14)
     ) +
   xlab("Tracking duration (number of season)") +
-  ylab("Number of Caribou")
-    ggtitle("Number of Caribou") +
-    theme_ipsum()
+  ylab("Number of Caribou") +
+  ggtitle("Number of Caribou") 
 ggplotly(season_num_plot)
 ```
 
 ```{r}
+library(ggridges)
 i_keep_duplicate_last <- individuals %>%
   group_by(animal_id) %>%
   slice(n())
@@ -506,23 +506,78 @@ season_j_ind <- season_num %>%
   left_join(i_keep_duplicate_last, by = c("animals" = "animal_id"))
 
 season_ind_count <- season_j_ind %>%
-  select(season, deploy_off_type) %>%
-  group_by(season, deploy_off_type) %>%
+  select(`Total season number`, deploy_off_type) %>%
+  group_by(`Total season number`, deploy_off_type) %>%
   count() 
 
 # season 4 other, dead, removal, unknow how many percentage for each
 # season 3 ...
 # season 2 ...
 # season 1...
-b <- ggplot(season_ind_count, aes(fill=deploy_off_type, y=n, x=season)) + 
-    geom_bar(position="stack", stat="identity") +
-    scale_fill_viridis(discrete = T) +
+b <- ggplot(season_ind_count, aes(fill=deploy_off_type, y=n, x = as.factor(`Total season number`))) + 
+    geom_col(position="stack") +
     ggtitle("Number of Caribou by each of their duration of tracking") +
     xlab("Deployment season duration") +
-    ylab("count")
+    ylab("count") 
+
 ggplotly(b)
 ```
 
+## Question 5: How are having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
+```{r}
+library(gganimate)
+library(animation)
+library(png)
+library(gifski)
+general_caribou <- locations %>%
+  filter(animal_id == "KE_car026" |
+         animal_id == "KE_car039" | 
+         animal_id == "KE_car025") %>%
+  arrange(timestamp) %>%
+  mutate(`caribou characteristic` = case_when(animal_id == "KE_car026" ~ "male",
+                                              animal_id == "KE_car039" ~ "pregnant",
+                                              animal_id == "KE_car025" ~ "with calf"))
+
+ggplot(data = general_caribou, 
+       aes(x = longitude, y = latitude, color = `caribou characteristic`)) + 
+  geom_point(size = 0.3) +
+  geom_path(alpha = 0.7, size = 0.6) +
+  transition_reveal(timestamp)
+```
+
+```{r}
+preg <- individuals %>%
+  filter(pregnant == "TRUE", with_calf == "FALSE")
+
+calf <- individuals %>%
+  filter(pregnant == "FALSE", with_calf == "TRUE")
+
+preg_loc_calf <- rbind(preg, calf) %>%
+  left_join(locations, by = c("animal_id" = "animal_id",
+                              "study_site" = "study_site")) %>%
+  mutate(`caribou characteristic` = case_when(pregnant == "TRUE" ~ "pregnant",
+                                              with_calf == "TRUE" ~ "with calf"))
+
+ggmap(caribou_map) +
+  geom_point(data = preg_loc_calf,
+             aes(x = longitude, y = latitude, col = study_site),
+              alpha = 0.5, size = 0.5) +
+  theme_void() +
+  facet_wrap(~`caribou characteristic`, strip.position = "bottom")
+  
+```
+```{r}
+library(gridExtra)
+preg_j_calf <- rbind(preg, calf) %>%
+  mutate(`caribou characteristic` = case_when(pregnant == "TRUE" ~ "pregnant",
+                                              with_calf == "TRUE" ~ "with calf")) %>%
+  select(-pregnant, -with_calf, -life_stage, -sex)
+
+preg_calf_plot <- ggplot(preg_j_calf, aes(x = `caribou characteristic`, fill = deploy_off_type)) +
+  geom_bar(position = "dodge", width = 0.6) +
+  facet_wrap(~study_site)
+ggplotly(preg_calf_plot)
+```
 # Conclusion
 
 Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased.
