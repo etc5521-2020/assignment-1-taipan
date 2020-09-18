@@ -685,3 +685,9 @@ Thanks for _tidytuesday_ provided the dataset, relevant articles and cleaning pr
 Packages used are @ggplot2, @tidyverse, @plotly, @kableExtra, @lubridate, @dplyr, @naniar, @ggmap, @gghighlight, @gganimate, @animation, @png, @gifski, @gridExtra and @visdat.
 
 # References
+
+Hinterland Who's Who (n.d.). Caribou.
+Retrieved from https://www.hww.ca/en/wildlife/mammals/caribou.html#sid2
+
+British Columbia Ministry of Environment, Lands and Parks (1999). *Mountain Caribou*.
+Retrieved from https://www2.gov.bc.ca/assets/gov/environment/plants-animals-and-ecosystems/species-ecosystems-at-risk/brochures/mountain_caribou.pdf
