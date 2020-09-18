@@ -454,7 +454,25 @@ So to answer whether the management plan has increased the number of caribou, it
 
 ## Question 5: How is deploy_off type vary at different study sites and what is its distribution in different stages? 
 
-```{r stage1, fig.cap="Distribution of the classification of tag deployment end.", fig.align= "center", fig.width=10, echo = FALSE}
+```{r stage, fig.cap="Proportion of the classification of tag deployment end in different life stage.", fig.align= "center", fig.width=6, echo = FALSE}
+stage <- individuals %>%
+  group_by(life_stage) %>%
+count(deploy_off_type) %>%
+  ggplot(aes(x = life_stage,
+             y = n)) +
+  geom_col(aes(fill = deploy_off_type), position = "fill") +
+  xlab("Life stage") +
+  ylab("proportion")  +
+  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        plot.title.position = "plot")
+
+stage
+```
+
+This figure \@ref(fig:stage) shows both the death rate and how active they are in different life stage, since the dataset is not large, I prefer to keep the NA values for reference, the removal of tag deployment can reflect vigorous activity,  there are only five males Caribou out of 286 and females do not reproduce until they are two years old, so graph may reflect the breeding period of the sample: the life stage of 2-6 has relatively low proportion of removal but this graph can not explain why there is no removal at the 6-8 life stage, but I believe this is the limitation of the sample size, 
+
+```{r study_site, fig.cap="Distribution of the classification of tag deployment end in different study sites.", fig.align= "center", fig.width=10, echo = FALSE}
 study_site <- individuals %>%
   group_by(deploy_off_type,study_site) %>%
 count(deploy_off_type) %>%
@@ -472,21 +490,9 @@ study_site
 ```
 
 
-```{r stage, fig.cap="Distribution of the classification of tag deployment end.", fig.align= "center", fig.width=6, echo = FALSE}
-stage <- individuals %>%
-  group_by(life_stage) %>%
-count(deploy_off_type) %>%
-  ggplot(aes(x = life_stage,
-             y = n)) +
-  geom_col(aes(fill = deploy_off_type), position = "fill") +
-  xlab("Tag deployment end type") +
-  ylab("Total number")  +
-  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
-        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-        plot.title.position = "plot")
+This figure shows the distribution of tag deployment and the amount in different study sites we can see that the tag deployment is centered in Graham, Hart Ranges, Kennedy, and Quintette, but the first two sites seem to be difficult to keep track, and for the last two, the largest proportion of deploy_off type is removal.
 
-stage
-```
+
 
 # Conclusion
 
