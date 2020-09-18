@@ -472,8 +472,8 @@ stage
 
 This figure \@ref(fig:stage) shows both the death rate and how active they are in different life stage, since the dataset is not large, I prefer to keep the NA values for reference, the removal of tag deployment can reflect vigorous activity,  there are only five males Caribou out of 286 and females do not reproduce until they are two years old, so graph may reflect the breeding period of the sample: the life stage of 2-6 has relatively low proportion of removal but this graph can not explain why there is no removal at the 6-8 life stage, but I believe this is the limitation of the sample size, 
 
-```{r study_site, fig.cap="Distribution of the classification of tag deployment end in different study sites.", fig.align= "center", fig.width=10, echo = FALSE}
-study_site <- individuals %>%
+```{r studysite, fig.cap="Distribution of the classification of tag deployment end in different study sites.", fig.align= "center", fig.width=10, echo = FALSE}
+studysite <- individuals %>%
   group_by(deploy_off_type,study_site) %>%
 count(deploy_off_type) %>%
   ggplot(aes(x = reorder(deploy_off_type, -n),
@@ -486,11 +486,11 @@ count(deploy_off_type) %>%
         plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
         plot.title.position = "plot")
 
-study_site
+studysite
 ```
 
 
-This figure shows the distribution of tag deployment and the amount in different study sites we can see that the tag deployment is centered in Graham, Hart Ranges, Kennedy, and Quintette, but the first two sites seem to be difficult to keep track, and for the last two, the largest proportion of deploy_off type is removal.
+This figure \@ref(fig:studysite) shows the distribution of tag deployment and the amount in different study sites we can see that the tag deployment is centered in Graham, Hart Ranges, Kennedy, and Quintette, but the first two sites seem to be difficult to keep track, and for the last two, the largest proportion of deploy_off type is removal.
 
 
 
