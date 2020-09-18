@@ -5,6 +5,8 @@ team: taipan
 author:
   - Helen Evangelina
   - Yiwen Jiang
+  - Joyce Lee
+  - Junhao Wang
 date: "`r Sys.Date()`"
 output: 
   bookdown::html_document2
