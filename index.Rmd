@@ -213,9 +213,8 @@ From the primary question, we came up with four secondary questions, which are a
 - How is the trend of the classification of tag deployment end (`deploy_off_type`)?  
 - Has the management plan increased the number of caribou?  
 
-
-
-- How are having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
+- How are seasons reflecting to caribou's lives?
+- How is having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
 - How does deploy_off type vary at different study sites and what is its distribution in different life stages?   
 
 
@@ -450,7 +449,7 @@ Figure \@ref(fig:number-study-site) above is showing the changes in the number o
 
 So to answer whether the management plan has increased the number of caribou, it appears that the management plan has not increased the number of caribou. And it is unlikely that the number of caribou would increase by that much in 2021. However, this analysis might not be accurate as there are some limitations associated with this analysis. Firstly, some study sites were only being monitored for certain years, which results to inaccurate result to analyse the trend of number of caribou. Secondly, there might be some caribou that were not tracked in certain years as we are calculating the number of caribou per year by using the documented locations data. It might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
 
-## Question 4: How are seasons reflecting the outcomes as tag deployment ends (deploy_off_type)?
+## Question 4: How are seasons reflecting to caribou's lives?
 
 
 ```{r j-season-data, echo=FALSE, message=FALSE, include=FALSE}
@@ -531,16 +530,15 @@ sdp_gg <- ggplotly(season_dead_plot)
 
 Spring was the season with the most number of caribou (256), so as with the most number of death (20). It is especially obvious for caribou being tagged in Quintette. Out of 60 caribou tagged in Quintette, 11 were found dead from 1988 to 2016. Except the 4 unknown-caused deaths, 5 caribou were confirmed being caught by predators (2 by wolf, 3 by grizzly). The other two died from suspected predation. No deaths were recorded from caribou tagged in Hart Ranges, Graham and Burnt Pine.
 
-From 1988 to 2016, the season with the second highest number of caribou (240) is summer. In the same way, the number of death in summer (11) is not as high as in spring (20) and only 4 deployment sites had death record - Quintette, Kennedy, Moberly and Burnt Pine. A factor contributing to this might be that the number of death for caribou tagged in Quintette had been much lower in summer. Here, Burnt Pine is a notable site. Although only 9 caribou tagged in Burnt Pine were spotted in summer, 2 deaths were noted, both caused by suspected wolf predation.
+From 1988 to 2016, the season with the second highest number of caribou (240) is summer. In the same way, the number of death in summer (11) is not as high as in spring (20) and only caribou tagged in 4 deployment sites had death record - Quintette, Kennedy, Moberly and Burnt Pine. A factor contributing to this might be that the number of death for caribou tagged in Quintette had been much lower in summer. Here, Burnt Pine is a notable site. Although only 9 caribou tagged in Burnt Pine were spotted in summer, 2 deaths were noted, both caused by suspected wolf predation.
 
-Following summer is winter in terms the number of caribou (233). Winter had the least number of death (10) among all seasons. Caribou being tagged in most study sites had been living quite safely during winter as the 10 deaths were from caribou being tagged in 3 sites only - Kennedy, Moberly and Narraway. Caribou tagged in Kennedy suffered the most deaths where 5 were found dead out of those 21 tagged in Kennedy. These 5 deaths consisted of 3 suspected predation, 1 accident and 1 vehicle collision.
+Following summer is winter in terms the number of caribou (233). Winter had the least number of death (10) among all seasons. Caribou being tagged in most study sites had been living quite safely during winter, as the 10 deaths were from caribou being tagged in 3 sites only - Kennedy, Moberly and Narraway. Caribou tagged in Kennedy suffered the most deaths where 5 were found dead out of those 21 tagged in Kennedy. These 5 deaths consisted of 3 suspected predation, 1 accident and 1 vehicle collision.
 
-Autumn was the season with the least number of caribou and with the second highest number of death among all seasons. There were deaths recorded for caribou tagged in all study sites, except those being tagged in Graham. A significant pattern appears in caribou tagged in Scott. Even though the number of caribou tagged in Scott was 4, there was 1 death noted, caused by Wolf predation. 
+Autumn was the season with the least number of caribou and with the second highest number of death among all seasons. There were deaths recorded for caribou tagged in all study sites, except those being tagged in Graham. A significant pattern appears in caribou tagged in Scott. Even though the number of caribou tagged in Scott was 4, 1 was death noted, caused by Wolf predation. 
 
 In brief, caribou being tagged in Graham had been living the most safetly with no death record for four seasons from 1988 to 2016. In spring and autumn, the way how caribou tagged in Scott lived exposed themselves to a high risk of death. In summer and winter, caribou tagged in Kennedy were considered as a dangerous group, contributing significant numbers of death, proportionately.
 
 ```{r j-season-combine, echo=FALSE, fig.cap="Total number of death (top) vs Total number of caribou (bottom) accord. to tagged site by seasons", fig.align="center"}
-library(plotly)
 subplot(sdp_gg, ssp_gg, nrows = 2, margin = 0.05, widths = 0.99)
 ```
 
@@ -562,12 +560,15 @@ sd_top_plot <- ggplot(transform(season_dead_top, season = factor(season, levels 
 ggplotly(sd_top_plot)
 ```
 Animals change their behaviours as season changes. In regards to survival, it is inevitable to assess the behaviours of caribou's predators. To do this, we first order the count for each death cause in descending order, then the top 3 death causes are selected by the three highest number of death in each season.
-Wolf predation had been the most severe cause of death for caribou, contributing to the most deaths in spring. This number exceeded all the recorded number of death among other causes for all seasons. Followed by wolf, Grizzly bear is another predator which caribou should be aware of in spring. 
-The trend of wolf predation gradually lowered, moving on from spring all the way to winter. In summer, the number of death caused by wolf predation decreased by half approximately, comparing with that in spring. However, suspected wolf predation and unknown predator are still threatening caribou's life with 4 deaths in total.
-Again, another reduce in wolf predation appears in autumn. Similar to summer, the number of death by wolf predation remains unchanged. Further, suspected predation arises and had exceeded the number of death by suspected wolf predation.
-Finally no wolf predation was found in winter. However, it is worthwhile to be aware of other predators which were more active during winter.
+Wolf predation had been the most severe cause of death for caribou, contributing to most deaths in spring. This number exceeded all the recorded number of death among other causes for all seasons. Followed by wolf, Grizzly bear is another predator which caribou should be aware of in spring. 
 
-## Question 5: How are having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
+The trend of wolf predation gradually lowered, moving on from spring all the way to winter. In summer, the number of death caused by wolf predation decreased by half approximately, comparing with that in spring. However, suspected wolf predation and unknown predator were still threatening caribou's lives with 4 deaths in total.
+
+Again, another reduce in wolf predation appears in autumn. Similar to summer, the number of death by suspected wolf predation remains unchanged. Further, suspected predation arises and had exceeded the number of death by suspected wolf predation.
+
+Finally no wolf predation was found in winter. However, it is worthwhile to be aware of other predators which were more active during winter, since the number of death caused by unknown predator predation rises again.
+
+## Question 5: How is having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
 Being pregnant or having a calf is the origin for sustaining and preserving the lives of caribou. We are aware of the large portion of missing values contained in variables - `pregnant` and `with_calf`. Nevertheless, we still think these two aspects should be included to investigate the living pattern of these caribou. 
 
 Within the dataset, there are only 6 pregnant caribou without a calf during pregnancy and 2 nonpregnant caribou with a calf. None nonpregnant caribou, meanwhile without a calf can be found. Therefore, a male caribou is selected to compare with the moving paths of the two types of caribou mentioned previously. Three of them were all tagged in Kennedy. We can see that the paths for both pregnant caribou and caribou with a calf tend to form into particular shapes by following certain directions. The path for the male caribou follows a certain shape for the first  two loops, yet interestingly, it started to move irregularly afterwards!
@@ -630,6 +631,8 @@ preg_calf_plot <- ggplot(preg_j_calf, aes(x = `caribou characteristic`, fill = d
 ggplotly(preg_calf_plot)
 ```
 
+Despite that the result shows that Quintette is not an ideal site for pregnant caribou with the high mortality rate, this outcome weighs extremely light due to the limited quantity of data. Therefore, we are unable to genuinely conclude which location is suitable or unsafe for pregnant caribou and caribou with calf.
+
 ## Question 6: How does deploy_off type vary at different study sites and what is its distribution in different life stages? 
 
 ```{r stage, fig.cap="Proportion of the classification of tag deployment end in different life stage.", fig.align= "center", fig.width=6, echo = FALSE}
@@ -674,11 +677,11 @@ This figure \@ref(fig:studysite) shows the distribution of tag deployment and th
 
 # Conclusion
 
-Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased. As for more detailed analysis about the tag deployment, we found that there is a period(2-6) the sample seems to be less active. Considering that most caribous of the sample are female, and they can multiply when they are 2 years old, maybe most caribou are preganent during 2-6 years old.
+Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased. As a factor, season indeed plays the role in affecting caribou and their predators' behaviours. Spring is found to be the most dangerous season for caribou because of wolf predation. Proceeding along after spring, wolf predation places less threats on caribou's lives, however more unknown predators emerged to hunt for caribou. As for more detailed analysis about the tag deployment, we found that there is a period(2-6) the sample seems to be less active. Considering that most caribous of the sample are female, and they can multiply when they are 2 years old, maybe most caribou are preganent during 2-6 years old. 
 
 # Acknowledgement
 
 Thanks for _tidytuesday_ provided the dataset, relevant articles and cleaning process on GitHub (@tidytuesday). The dataset used is Caribou tracking dataset offered by Movebank Data Repository (@BCMinistry).  
-Packages used are @ggplot2, @tidyverse, @plotly, @kableExtra, @lubridate, @dplyr, @naniar, @ggmap, @gghighlight and @visdat.
+Packages used are @ggplot2, @tidyverse, @plotly, @kableExtra, @lubridate, @dplyr, @naniar, @ggmap, @gghighlight, @gganimate, @animation, @png, @gifski, @gridExtra and @visdat.
 
 # References
