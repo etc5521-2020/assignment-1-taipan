@@ -537,7 +537,6 @@ Following summer is winter in terms the number of caribou (233). Winter had the 
 Autumn was the season with the least number of caribou and with the second highest number of death among all seasons. There were deaths recorded for caribou tagged in all study sites, except those being tagged in Graham. A significant pattern appears in caribou tagged in Scott. Even though the number of caribou tagged in Scott was 4, 1 was death noted, caused by Wolf predation. 
 
 In brief, caribou being tagged in Graham had been living the most safetly with no death record for four seasons from 1988 to 2016. In spring and autumn, the way how caribou tagged in Scott lived exposed themselves to a high risk of death. In summer and winter, caribou tagged in Kennedy were considered as a dangerous group, contributing significant numbers of death, proportionately.
-
 ```{r j-season-combine, echo=FALSE, fig.cap="Total number of death (top) vs Total number of caribou (bottom) accord. to tagged site by seasons", fig.align="center"}
 subplot(sdp_gg, ssp_gg, nrows = 2, margin = 0.05, widths = 0.99)
 ```
@@ -682,12 +681,32 @@ Through the above analysis, we can conclude that the population estimate of the 
 # Acknowledgement
 
 Thanks for _tidytuesday_ provided the dataset, relevant articles and cleaning process on GitHub (@tidytuesday). The dataset used is Caribou tracking dataset offered by Movebank Data Repository (@BCMinistry).  
-Packages used are @ggplot2, @tidyverse, @plotly, @kableExtra, @lubridate, @dplyr, @naniar, @ggmap, @gghighlight, @gganimate, @animation, @png, @gifski, @gridExtra and @visdat.
+Packages used are @ggplot2, @tidyverse, @plotly, @kableExtra, @lubridate, @dplyr, @naniar, @ggmap, @gghighlight and @visdat.
 
 # References
+Baptiste Auguie (2017). gridExtra: Miscellaneous Functions for "Grid"
+  Graphics. R package version 2.3. https://CRAN.R-project.org/package=gridExtra
+  
+British Columbia Ministry of Environment, Lands and Parks (1999). *Mountain Caribou*.
+Retrieved from https://www2.gov.bc.ca/assets/gov/environment/plants-animals-and-ecosystems/species-ecosystems-at-risk/brochures/mountain_caribou.pdf
 
 Hinterland Who's Who (n.d.). Caribou.
 Retrieved from https://www.hww.ca/en/wildlife/mammals/caribou.html#sid2
 
-British Columbia Ministry of Environment, Lands and Parks (1999). *Mountain Caribou*.
-Retrieved from https://www2.gov.bc.ca/assets/gov/environment/plants-animals-and-ecosystems/species-ecosystems-at-risk/brochures/mountain_caribou.pdf
+Jeroen Ooms (2018). gifski: Highest Quality GIF Encoder. R package version
+  0.8.6. https://CRAN.R-project.org/package=gifski
+
+Simon Urbanek (2013). png: Read and write PNG images. R package version 0.1-7.
+  https://CRAN.R-project.org/package=png
+
+Thomas Lin Pedersen and David Robinson (2020). gganimate: A Grammar of
+  Animated Graphics. R package version 1.0.6.
+  https://CRAN.R-project.org/package=gganimate
+
+Yihui Xie (2013). animation: An R Package for Creating Animations and
+  Demonstrating Statistical Methods. Journal of Statistical Software, 53(1),
+  1-27. URL http://www.jstatsoft.org/v53/i01/.
+
+Yihui Xie [aut, cre], Christian Mueller [ctb], Lijia Yu [ctb], Weicheng Zhu
+  [ctb] (2018). animation: A Gallery of Animations in Statistics and Utilities
+  to Create Animations. R package version 2.6.
