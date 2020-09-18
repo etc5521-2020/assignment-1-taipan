@@ -12,6 +12,10 @@ bibliography: references.bib
 biblio-style: authoryear-comp
 ---
 
+```{r global, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,cache = TRUE)
+```
+
 ```{r setup, echo=FALSE, message=FALSE}
 library(tidyverse)
 library(kableExtra)
@@ -440,6 +444,44 @@ ggplotly(study_site_trend)
 Figure \@ref(fig:number-study-site) above is showing the changes in the number of caribou yearly based on the study site. The most noticeable thing here is that not all study sites are being recorded every year, and that the trend of number of caribou varies over the study site. From 1988 to 2001, the only study site being recorded was Hart Ranges, in where there was a huge drop between this period. Most of the other study sites started to be recorded since 2002, except for Scott which started in 2013. Most of the study sites are showing a sharp decline in the number of caribou in 2010, which explains the huge drop in the overall trend mentioned before. The number of caribou in Narraway is super low which is due to the herds that are living in this site tend to stay in the lower-elevation area during summer, thus are more exposed to predation risk. Looking at the number of caribou from 2012, there has not been any significant changes in the number of caribou. Therefore, it appears that the management plan has not increased the number of caribou.
 
 So to answer whether the management plan has increased the number of caribou, it appears that the management plan has not increased the number of caribou. And it is unlikely that the number of caribou would increase by that much in 2021. However, this analysis might not be accurate as there are some limitations associated with this analysis. Firstly, some study sites were only being monitored for certain years, which results to inaccurate result to analyse the trend of number of caribou. Secondly, there might be some caribou that were not tracked in certain years as we are calculating the number of caribou per year by using the documented locations data. It might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
+
+## Question 4: How are seasons reflecting the outcomes as tag deployment ends (deploy_off_type)?
+
+## Question 5: How is deploy_off type vary at different study sites and what is its distribution in different stages? 
+
+```{r stage1, fig.cap="Distribution of the classification of tag deployment end.", fig.align= "center", fig.width=10, echo = FALSE}
+study_site <- individuals %>%
+  group_by(deploy_off_type,study_site) %>%
+count(deploy_off_type) %>%
+  ggplot(aes(x = reorder(deploy_off_type, -n),
+             y = n)) +
+  geom_col(aes(fill = deploy_off_type)) +
+  facet_wrap(~study_site)+
+  xlab("Tag deployment end type") +
+  ylab("Total number")  +
+  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        plot.title.position = "plot")
+
+study_site
+```
+
+
+```{r stage, fig.cap="Distribution of the classification of tag deployment end.", fig.align= "center", fig.width=6, echo = FALSE}
+stage <- individuals %>%
+  group_by(life_stage) %>%
+count(deploy_off_type) %>%
+  ggplot(aes(x = life_stage,
+             y = n)) +
+  geom_col(aes(fill = deploy_off_type), position = "fill") +
+  xlab("Tag deployment end type") +
+  ylab("Total number")  +
+  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        plot.title.position = "plot")
+
+stage
+```
 
 # Conclusion
 
