@@ -12,6 +12,10 @@ bibliography: references.bib
 biblio-style: authoryear-comp
 ---
 
+```{r global, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,cache = TRUE)
+```
+
 ```{r setup, echo=FALSE, message=FALSE}
 library(tidyverse)
 library(kableExtra)
@@ -207,12 +211,15 @@ The primary question to answer from this dataset is __how is the trend of the nu
 From the primary question, we came up with four secondary questions, which are as follows:  
 - Do the habitats vary between summer and winter?  
 - How is the trend of the classification of tag deployment end (`deploy_off_type`)?  
-- Has the management plan increased the number of caribou?
+- Has the management plan increased the number of caribou?  
+
+
 
 - How are having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
-- Which life stage has the highest death rate? 
+- How does deploy_off type vary at different study sites and what is its distribution in different life stages?   
 
-# Analysis and findings
+
+# Analysis and findings 
 
 To overview the survival of Caribou in different herds, we will first look at the changing on the number of Caribou which have tracked. We use the location data to represent the changing on the number of caribou in each herd. The location data are tracking the location information of each caribou for every four hours; the tracking conducted until tag deployment ended.
 
@@ -445,6 +452,7 @@ So to answer whether the management plan has increased the number of caribou, it
 
 ## Question 4: How are seasons reflecting the outcomes as tag deployment ends (deploy_off_type)?
 
+
 ```{r j-season-data, echo=FALSE, message=FALSE, include=FALSE}
 fourseason <- locations_wrangled %>%
   mutate(locations_wrangled, season = case_when(month %in% c("12", "1", "2") ~ "Winter",
@@ -621,9 +629,52 @@ preg_calf_plot <- ggplot(preg_j_calf, aes(x = `caribou characteristic`, fill = d
   facet_wrap(~study_site)
 ggplotly(preg_calf_plot)
 ```
+
+## Question 5: How does deploy_off type vary at different study sites and what is its distribution in different life stages? 
+
+```{r stage, fig.cap="Proportion of the classification of tag deployment end in different life stage.", fig.align= "center", fig.width=6, echo = FALSE}
+stage <- individuals %>%
+  group_by(life_stage) %>%
+count(deploy_off_type) %>%
+  ggplot(aes(x = life_stage,
+             y = n)) +
+  geom_col(aes(fill = deploy_off_type), position = "fill") +
+  xlab("Life stage") +
+  ylab("proportion")  +
+  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        plot.title.position = "plot")
+
+stage
+```
+
+This figure \@ref(fig:stage) shows both the death rate and how active they are in different life stage, since the dataset is not large, I prefer to keep the NA values for reference, the removal of tag deployment can reflect vigorous activity,  there are only five males Caribou out of 286 and females do not reproduce until they are two years old, so graph may reflect the breeding period of the sample: the life stage of 2-6 has relatively low proportion of removal but this graph can not explain why there is no removal at the 6-8 life stage, but I believe this is the limitation of the sample size, 
+
+```{r studysite, fig.cap="Distribution of the classification of tag deployment end in different study sites.", fig.align= "center", fig.width=10, echo = FALSE}
+studysite <- individuals %>%
+  group_by(deploy_off_type,study_site) %>%
+count(deploy_off_type) %>%
+  ggplot(aes(x = reorder(deploy_off_type, -n),
+             y = n)) +
+  geom_col(aes(fill = deploy_off_type)) +
+  facet_wrap(~study_site)+
+  xlab("Tag deployment end type") +
+  ylab("Total number")  +
+  theme(axis.text.y = element_text(size = 12, color = "black", hjust = 1),
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        plot.title.position = "plot")
+
+studysite
+```
+
+
+This figure \@ref(fig:studysite) shows the distribution of tag deployment and the amount in different study sites we can see that the tag deployment is centered in Graham, Hart Ranges, Kennedy, and Quintette, but the first two sites seem to be difficult to keep track, and for the last two, the largest proportion of deploy_off type is removal.
+
+
+
 # Conclusion
 
-Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased.
+Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased. As for more detailed analysis about the tag deployment, we found that there is a period(2-6) the sample seems to be less active. Considering that most caribous of the sample are female, and they can multiply when they are 2 years old, maybe most caribou are preganent during 2-6 years old.
 
 # Acknowledgement
 
