@@ -443,6 +443,184 @@ Figure \@ref(fig:number-study-site) above is showing the changes in the number o
 
 So to answer whether the management plan has increased the number of caribou, it appears that the management plan has not increased the number of caribou. And it is unlikely that the number of caribou would increase by that much in 2021. However, this analysis might not be accurate as there are some limitations associated with this analysis. Firstly, some study sites were only being monitored for certain years, which results to inaccurate result to analyse the trend of number of caribou. Secondly, there might be some caribou that were not tracked in certain years as we are calculating the number of caribou per year by using the documented locations data. It might not be an accurate analysis as there might be some caribou that were not tracked in certain years, or that the locations were not being documented inside the locations dataset.
 
+## Question 4: How are seasons reflecting the outcomes as tag deployment ends (deploy_off_type)?
+
+```{r j-season-data, echo=FALSE, message=FALSE, include=FALSE}
+fourseason <- locations_wrangled %>%
+  mutate(locations_wrangled, season = case_when(month %in% c("12", "1", "2") ~ "Winter",
+                                                month %in% c("3", "4", "5") ~ "Spring",
+                                                month %in% c("6", "7", "8") ~ "Summer",
+                                                month %in% c("9", "10", "11") ~ "Autumn")) 
+
+season_summary <- fourseason %>% 
+  group_by(season, study_site) %>%
+  summarise(animals = unique(animal_id, .groups = 'drop')) 
+  
+number_season <- season_summary %>%
+  group_by(season, study_site) %>%
+  summarise(total = n())
+
+number_season %>%
+  select(season, total) %>%
+  group_by(season) %>%
+  summarise(total = sum(total))
+
+season_dead <- individuals_dead %>%
+  left_join(fourseason, by = c("animal_id" = "animal_id",
+                              "study_site" = "study_site")) %>%
+  group_by(animal_id) %>%
+  slice(n())
+
+number_season_dead <- season_dead %>%
+  select(season, study_site, animal_id) %>%
+  group_by(season, study_site) %>%
+  summarise(total = n())
+
+number_season_dead %>%
+  select(season, total) %>%
+  group_by(season) %>%
+  summarise(total = sum(total))
+
+season_dead %>%
+  filter(season == "Autumn", study_site == "Scott") %>%
+  summarise(animals = unique(animal_id, .groups = 'drop')) %>%
+  left_join(individuals, by = c("animals" = "animal_id")) %>%
+  filter(deploy_off_type == "dead")
+                          
+```
+
+```{r j-ssp, echo=FALSE}
+season_site_plot <- ggplot(transform(number_season,
+                                     season = factor(season, levels = c("Spring",
+                                                                        "Summer",
+                                                                        "Autumn",
+                                                                        "Winter")))) +
+  geom_col(aes(reorder(study_site, -total), total, fill = study_site)) +
+  facet_wrap(season~., ncol = 4) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylab("Total number") +
+  xlab("Study site") +
+  theme(legend.title = element_blank(),
+       legend.position = "none")
+
+ssp_gg <- ggplotly(season_site_plot)
+```
+
+```{r j-sdp, echo=FALSE, message=FALSE, warning=FALSE}
+season_dead_plot <- ggplot(transform(number_season_dead,
+                season = factor(season, levels = c("Spring", "Summer", "Autumn", "Winter")))) +
+  geom_col(aes(reorder(study_site, -total), total, fill = study_site)) +
+  facet_wrap(season~., ncol = 4) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ylab("Total death number") +
+  xlab("Study site") +
+  scale_fill_manual(values = c("#F8766D", "#7CAE00", "#00BE67", "#00BFC4", "#00A9FF", "#C77CFF", "#FF61CC")) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+sdp_gg <- ggplotly(season_dead_plot)
+```
+
+Spring was the season with the most number of caribou (256), so as with the most number of death (20). It is especially obvious for caribou being tagged in Quintette. Out of 60 caribou tagged in Quintette, 11 were found dead from 1988 to 2016. Except the 4 unknown-caused deaths, 5 caribou were confirmed being caught by predators (2 by wolf, 3 by grizzly). The other two died from suspected predation. No deaths were recorded from caribou tagged in Hart Ranges, Graham and Burnt Pine.
+
+From 1988 to 2016, the season with the second highest number of caribou (240) is summer. In the same way, the number of death in summer (11) is not as high as in spring (20) and only 4 deployment sites had death record - Quintette, Kennedy, Moberly and Burnt Pine. A factor contributing to this might be that the number of death for caribou tagged in Quintette had been much lower in summer. Here, Burnt Pine is a notable site. Although only 9 caribou tagged in Burnt Pine were spotted in summer, 2 deaths were noted, both caused by suspected wolf predation.
+
+Following summer is winter in terms the number of caribou (233). Winter had the least number of death (10) among all seasons. Caribou being tagged in most study sites had been living quite safely during winter as the 10 deaths were from caribou being tagged in 3 sites only - Kennedy, Moberly and Narraway. Caribou tagged in Kennedy suffered the most deaths where 5 were found dead out of those 21 tagged in Kennedy. These 5 deaths consisted of 3 suspected predation, 1 accident and 1 vehicle collision.
+
+Autumn was the season with the least number of caribou and with the second highest number of death among all seasons. There were deaths recorded for caribou tagged in all study sites, except those being tagged in Graham. A significant pattern appears in caribou tagged in Scott. Even though the number of caribou tagged in Scott was 4, there was 1 death noted, caused by Wolf predation. 
+
+In brief, caribou being tagged in Graham had been living the most safetly with no death record for four seasons from 1988 to 2016. In spring and autumn, the way how caribou tagged in Scott lived exposed themselves to a high risk of death. In summer and winter, caribou tagged in Kennedy were considered as a dangerous group, contributing significant numbers of death, proportionately.
+
+```{r j-season-combine, echo=FALSE, fig.cap="Total number of death (top) vs Total number of caribou (bottom) accord. to tagged site by seasons", fig.align="center"}
+library(plotly)
+subplot(sdp_gg, ssp_gg, nrows = 2, margin = 0.05, widths = 0.99)
+```
+
+```{r j-season-cause, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Top 3 causes of death by seasons", fig.align="center"}
+season_dead_top <- season_dead %>%
+  select(animal_id, death_cause, season) %>%
+  group_by(season) %>%
+  count(death_cause) %>%
+  group_by(season) %>%
+  top_n(n = 3) 
+
+sd_top_plot <- ggplot(transform(season_dead_top, season = factor(season, levels = c("Spring", "Summer", "Autumn", "Winter")))) +
+  geom_col(aes(x = reorder(death_cause, n), y = n, fill = death_cause)) +
+  facet_wrap(season~.) +
+  coord_flip() +
+  theme(legend.position = "none") +
+  xlab("Cause of death") +
+  ylab("Total number of death by season") 
+ggplotly(sd_top_plot)
+```
+Animals change their behaviours as season changes. In regards to survival, it is inevitable to assess the behaviours of caribou's predators. To do this, we first order the count for each death cause in descending order, then the top 3 death causes are selected by the three highest number of death in each season.
+Wolf predation had been the most severe cause of death for caribou, contributing to the most deaths in spring. This number exceeded all the recorded number of death among other causes for all seasons. Followed by wolf, Grizzly bear is another predator which caribou should be aware of in spring. 
+The trend of wolf predation gradually lowered, moving on from spring all the way to winter. In summer, the number of death caused by wolf predation decreased by half approximately, comparing with that in spring. However, suspected wolf predation and unknown predator are still threatening caribou's life with 4 deaths in total.
+Again, another reduce in wolf predation appears in autumn. Similar to summer, the number of death by wolf predation remains unchanged. Further, suspected predation arises and had exceeded the number of death by suspected wolf predation.
+Finally no wolf predation was found in winter. However, it is worthwhile to be aware of other predators which were more active during winter.
+
+## Question 5: How are having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
+Being pregnant or having a calf is the origin for sustaining and preserving the lives of caribou. We are aware of the large portion of missing values contained in variables - `pregnant` and `with_calf`. Nevertheless, we still think these two aspects should be included to investigate the living pattern of these caribou. 
+
+Within the dataset, there are only 6 pregnant caribou without a calf during pregnancy and 2 nonpregnant caribou with a calf. None nonpregnant caribou, meanwhile without a calf can be found. Therefore, a male caribou is selected to compare with the moving paths of the two types of caribou mentioned previously. Three of them were all tagged in Kennedy. We can see that the paths for both pregnant caribou and caribou with a calf tend to form into particular shapes by following certain directions. The path for the male caribou follows a certain shape for the first  two loops, yet interestingly, it started to move irregularly afterwards!
+```{r j-path, echo=FALSE, fig.cap="Paths for male caribou, pregnant caribou and caribou with calf in Kennedy", fig.align="center"}
+library(gganimate)
+library(animation)
+library(png)
+library(gifski)
+general_caribou <- locations %>%
+  filter(animal_id == "KE_car026" |
+         animal_id == "KE_car039" | 
+         animal_id == "KE_car025" ) %>%
+  arrange(timestamp) %>%
+  mutate(`caribou characteristic` = case_when(animal_id == "KE_car026" ~ "male",
+                                              animal_id == "KE_car039" ~ "pregnant",
+                                              animal_id == "KE_car025" ~ "with calf"))
+
+ggplot(data = general_caribou, 
+       aes(x = longitude, y = latitude, color = `caribou characteristic`)) + 
+  geom_point(size = 0.3) +
+  geom_path(alpha = 0.7, size = 0.6) +
+  transition_reveal(timestamp)
+```
+Comparing with all caribou in this deployment, the regions where pregnant caribou and caribou with calf were active were considerably smaller. This could be due to the insufficient data of these two group. 
+Pregnant caribou is characterised by migrating towards ["rugged, high-elevation sites"](https://www2.gov.bc.ca/assets/gov/environment/plants-animals-and-ecosystems/species-ecosystems-at-risk/brochures/mountain_caribou.pdf) for calving. This is captured in figure \@ref(fig:j-mom), especially in Quintette which is relatively closer to Mt.Robson and has a higher elevation. On the contrary, for caribou with a calf, the sites they resided seem to be further from the mountains and were more concentrated in the sites with more greens. This might be related to the migration of caribou with its calf for foraging, as soon as its calf is able to digest feed, which only [takes 3 weeks after birth](https://www.hww.ca/en/wildlife/mammals/caribou.html#sid2). Kennedy was the overlapping site where pregnant caribou and caribou with a calf resided.
+```{r j-mom, echo=FALSE, fig.cap="Location movement of pregnant caribou and caribou with calf", fig.align="center"}
+preg <- individuals %>%
+  filter(pregnant == "TRUE", with_calf == "FALSE")
+
+calf <- individuals %>%
+  filter(pregnant == "FALSE", with_calf == "TRUE")
+
+preg_loc_calf <- rbind(preg, calf) %>%
+  left_join(locations, by = c("animal_id" = "animal_id",
+                              "study_site" = "study_site")) %>%
+  mutate(`caribou characteristic` = case_when(pregnant == "TRUE" ~ "pregnant",
+                                              with_calf == "TRUE" ~ "with calf"))
+
+ggmap(caribou_map) +
+  geom_point(data = preg_loc_calf,
+             aes(x = longitude, y = latitude, col = study_site),
+              alpha = 0.5, size = 0.5) +
+  theme_void() +
+  facet_wrap(~`caribou characteristic`, strip.position = "bottom")
+  
+```
+
+Although Quintette seemed to be a suitable place for pregnant caribou to stay theoretically, it was the site with most number of deaths for pregnant caribou. Out of the 6 pregnant caribou in total, half were recorded dead in Quintette. The cause for them were all unknown with one suspected predation. One of the two pregnant caribou residing in Kennedy also died from suspected predation.
+Fortunately, the deployment were ended with the removal of tags for the 2 caribou with calf.
+```{r j-mom-bar, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Deployment outcomes for pregnant caribou and caribou with calf by study sites", fig.align="center"}
+library(gridExtra)
+preg_j_calf <- rbind(preg, calf) %>%
+  mutate(`caribou characteristic` = case_when(pregnant == "TRUE" ~ "pregnant",
+                                              with_calf == "TRUE" ~ "with calf")) %>%
+  select(-pregnant, -with_calf, -life_stage, -sex)
+
+preg_calf_plot <- ggplot(preg_j_calf, aes(x = `caribou characteristic`, fill = deploy_off_type)) +
+  geom_bar(position = "dodge", width = 0.6) +
+  facet_wrap(~study_site)
+ggplotly(preg_calf_plot)
+```
 # Conclusion
 
 Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased.
