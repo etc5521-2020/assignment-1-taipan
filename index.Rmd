@@ -630,7 +630,7 @@ preg_calf_plot <- ggplot(preg_j_calf, aes(x = `caribou characteristic`, fill = d
 ggplotly(preg_calf_plot)
 ```
 
-## Question 5: How does deploy_off type vary at different study sites and what is its distribution in different life stages? 
+## Question 6: How does deploy_off type vary at different study sites and what is its distribution in different life stages? 
 
 ```{r stage, fig.cap="Proportion of the classification of tag deployment end in different life stage.", fig.align= "center", fig.width=6, echo = FALSE}
 stage <- individuals %>%
