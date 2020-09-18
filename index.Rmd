@@ -216,7 +216,7 @@ From the primary question, we came up with four secondary questions, which are a
 
 
 - How are having a calf or being pregnant at time of deployment affecting each type of outcome (deploy_off_type) as tag deployment ends?
-- Which life stage has the highest death rate?  
+- How does deploy_off type vary at different study sites and what is its distribution in different life stages?   
 
 
 # Analysis and findings 
@@ -452,7 +452,7 @@ So to answer whether the management plan has increased the number of caribou, it
 
 ## Question 4: How are seasons reflecting the outcomes as tag deployment ends (deploy_off_type)?
 
-## Question 5: How is deploy_off type vary at different study sites and what is its distribution in different stages? 
+## Question 5: How does deploy_off type vary at different study sites and what is its distribution in different life stages? 
 
 ```{r stage, fig.cap="Proportion of the classification of tag deployment end in different life stage.", fig.align= "center", fig.width=6, echo = FALSE}
 stage <- individuals %>%
@@ -496,7 +496,7 @@ This figure \@ref(fig:studysite) shows the distribution of tag deployment and th
 
 # Conclusion
 
-Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased.
+Through the above analysis, we can conclude that the population estimate of the Caribou decreased over a decade. As a result of the volatility, the long-term trend can not be forecasted, but in the short-term, the number of Caribou will decrease. The habitats of Caribou are varying between summer and winter. From winter to summer, they move from low-elevation to high-elevation for the breed and to avoid predators. The highest number of tag deployment end classification is _unknown_ which indicates improper documentation, followed by removal and death. Predation, primarily by wolf, is the majority cause of calf mortality, which is due to seasonal habitat change and the development of roads and pipelines. The management plan seems to be ineffective as the number of caribou has not increased. As for more detailed analysis about the tag deployment, we found that there is a period(2-6) the sample seems to be less active. Considering that most caribous of the sample are female, and they can multiply when they are 2 years old, maybe most caribou are preganent during 2-6 years old.
 
 # Acknowledgement
 
